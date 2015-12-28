@@ -23,9 +23,18 @@ class CreateModelMember extends Migration
 						$table->string('member_fb',100);
 						$table->integer('member_coin');
 						$table->timestamp('member_registered');
+						$table->string('city_code',25);
 						$table->tinyInteger('member_status')->default(1);
             $table->timestamps();
         });
+
+			Schema::table('member', function(Blueprint $table)
+				{
+					$table->foreign('city_code')
+						->references('city_code')
+						->on('ext_city')
+						->onDelete('cascade');
+				});
     }
 
     /**

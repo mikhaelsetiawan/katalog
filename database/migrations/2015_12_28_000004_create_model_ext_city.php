@@ -14,7 +14,7 @@ class CreateModelExtCity extends Migration
     {
         Schema::create('ext_city', function (Blueprint $table) {
             $table->string('city_code',25);
-						$table->unsignedInteger('member_id');
+						$table->string('province_code',25);
 						$table->string('city_name',255);
 						$table->timestamps();
 						$table->primary('city_code');
@@ -22,9 +22,9 @@ class CreateModelExtCity extends Migration
 
 			Schema::table('ext_city', function(Blueprint $table)
 				{
-					$table->foreign('member_id')
-						->references('member_id')
-						->on('member')
+					$table->foreign('province_code')
+						->references('province_code')
+						->on('ext_province')
 						->onDelete('cascade');
 				});
     }

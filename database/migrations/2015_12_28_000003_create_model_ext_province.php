@@ -15,7 +15,6 @@ class CreateModelExtProvince extends Migration
         Schema::create('ext_province', function (Blueprint $table) {
 						$table->string('province_code',25);
 						$table->string('country_code',25);
-						$table->string('city_code',25);
 						$table->string('province_name',255);
 						$table->primary('province_code');
             $table->timestamps();
@@ -26,10 +25,6 @@ class CreateModelExtProvince extends Migration
 					$table->foreign('country_code')
 						->references('country_code')
 						->on('ext_country')
-						->onDelete('cascade');
-					$table->foreign('city_code')
-						->references('city_code')
-						->on('ext_city')
 						->onDelete('cascade');
 				});
     }

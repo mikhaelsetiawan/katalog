@@ -12,13 +12,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 			$this->call(AdminTableSeeder::class);
+			$this->call(CountryTableSeeder::class);
+			$this->call(ProvinceTableSeeder::class);
+			$this->call(CityTableSeeder::class);
 			$this->call(MemberTableSeeder::class);
-			$this->call(ExtcityTableSeeder::class);
 			$this->call(BusinessTableSeeder::class);
 			$this->call(BusinessfieldTableSeeder::class);
 			$this->call(BuildingTableSeeder::class);
-			$this->call(CountryTableSeeder::class);
-			$this->call(ProvinceTableSeeder::class);
 
     }
 }
@@ -50,7 +50,8 @@ class DatabaseSeeder extends Seeder
 						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
 						'member_birth_date'=>'1990-01-01',
 						'member_gender'=>'l',
-						'member_coin'=>'1000000'
+						'member_coin'=>'1000000',
+						'city_code'=>'CTY00001'
 					],
 					[
 						'member_name'=>'DEF',
@@ -59,7 +60,8 @@ class DatabaseSeeder extends Seeder
 						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
 						'member_birth_date'=>'1990-02-02',
 						'member_gender'=>'p',
-						'member_coin'=>'999999'
+						'member_coin'=>'999999',
+						'city_code'=>'CTY00001'
 					],
 					[
 						'member_name'=>'GHI',
@@ -68,30 +70,26 @@ class DatabaseSeeder extends Seeder
 						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
 						'member_birth_date'=>'1990-03-03',
 						'member_gender'=>'l',
-						'member_coin'=>'0'
+						'member_coin'=>'0',
+						'city_code'=>'CTY00002'
 					]
 				));
 		}
 	}
 
-	class extcityTableSeeder extends Seeder {
+	class cityTableSeeder extends Seeder {
 		public function run()
 		{
 			DB::table('ext_city')->delete();
 			DB::table('ext_city')->insert(array(
 					[
 						'city_code'=>'CTY00001',
-						'member_id'=>'1',
+						'province_code'=>'PRO00001',
 						'city_name'=>'SURABAYA'
 					],
 					[
 						'city_code'=>'CTY00002',
-						'member_id'=>'2',
-						'city_name'=>'SURABAYA'
-					],
-					[
-						'city_code'=>'CTY00003',
-						'member_id'=>'3',
+						'province_code'=>'PRO00002',
 						'city_name'=>'JAKARTA'
 					]
 				));
@@ -130,7 +128,17 @@ class DatabaseSeeder extends Seeder
 					[
 						'business_id'=>'1',
 						'bfield_name'=>'Business Field 1',
-						'bfield_parent'=>'',
+						'bfield_parent'=>'0',
+					],
+					[
+						'business_id'=>'2',
+						'bfield_name'=>'Business Field 2',
+						'bfield_parent'=>'1',
+					],
+					[
+						'business_id'=>'3',
+						'bfield_name'=>'Business Field 3',
+						'bfield_parent'=>'1',
 					],
 				));
 		}
@@ -151,7 +159,7 @@ class DatabaseSeeder extends Seeder
 					],
 					[
 						'business_id'=>'2',
-						'city_code'=>'CTY00002',
+						'city_code'=>'CTY00001',
 						'building_name'=>'PT. DEF Maju Cabang Surabaya',
 						'building_address'=>'Jl. DEF no 7-9, Surabaya',
 						'building_lat'=>'0.0',
@@ -159,7 +167,7 @@ class DatabaseSeeder extends Seeder
 					],
 					[
 						'business_id'=>'3',
-						'city_code'=>'CTY00003',
+						'city_code'=>'CTY00002',
 						'building_name'=>'Toko Super GHI Cabang Jakarta',
 						'building_address'=>'Jl. GHI no 12-15, Jakarta',
 						'building_lat'=>'0.0',
@@ -190,19 +198,11 @@ class DatabaseSeeder extends Seeder
 					[
 						'province_code'=>'PRO00001',
 						'country_code'=>'COU00001',
-						'city_code'=>'CTY00001',
 						'province_name'=>'Jawa Timur'
 					],
 					[
 						'province_code'=>'PRO00002',
 						'country_code'=>'COU00001',
-						'city_code'=>'CTY00002',
-						'province_name'=>'Jawa Timur'
-					],
-					[
-						'province_code'=>'PRO00003',
-						'country_code'=>'COU00001',
-						'city_code'=>'CTY00003',
 						'province_name'=>'Jakarta'
 					]
 				));
