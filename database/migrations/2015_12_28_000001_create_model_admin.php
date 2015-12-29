@@ -16,7 +16,7 @@ class CreateModelAdmin extends Migration
             $table->increments('admin_id');
 						$table->string('admin_name',255);
 						$table->string('admin_username',100);
-						$table->string('admin_password',32);
+						$table->string('admin_password',60);
 						$table->string('admin_email',254)->unique();
 						$table->tinyInteger('admin_status')->default(1);
             $table->timestamps();

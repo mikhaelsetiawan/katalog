@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.ttf') format('ttf'), url('../fonts/fontawesome-webfont.woff') format('woff');
+}
+
+.popup-overlay {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 5;
+}
+
+.popup-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.5);
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 50px;
+    position: relative;
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+.popup-header {
+    background-color: #e7e7e7;
+    border-bottom: 1px solid #b4b4b4;
+    color: #777777;
+    font-size: 16px;
+    font-weight: 500;
+    height: 48px;
+    padding: 0 30px;
+    padding-top: 14px;
+    text-transform: uppercase;
+    width: 100%;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+
+.popup-body {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(96, 96, 96, 1);
+    font-size: 13px;
+    min-height: 100px;
+    padding: 20px 30px 40px;
+    width: 100%;
+}
+
+.popup-buttons {
+    background-color: #ffffff;
+    border-top: 1px solid #b4b4b4;
+    height: 100%;
+    padding: 10px 30px;
+    width: 100%;
+}
+
+.cb {
+    clear: both;
+}
+
+.fr {
+    float: right;
+}

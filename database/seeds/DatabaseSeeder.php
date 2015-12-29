@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 					[
 						'admin_name'=>'Administrator',
 						'admin_username'=>'admin',
-						'admin_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
+						'admin_password'=>'$2y$10$w8GwRj7VPqGD/5gFK6MHU.RADsw4/du9KIvOs8jiX/u.LtHSf76bu',
 						'admin_email'=>'admin@maxel.id'
 					]
 				));
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
 						'member_name'=>'ABC',
 						'member_email'=>'abc@gmail.id',
 						'member_username'=>'abc',
-						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
+						'member_password'=>'$2y$10$w8GwRj7VPqGD/5gFK6MHU.RADsw4/du9KIvOs8jiX/u.LtHSf76bu',
 						'member_birth_date'=>'1990-01-01',
 						'member_gender'=>'l',
 						'member_coin'=>'1000000',
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
 						'member_name'=>'DEF',
 						'member_email'=>'def@gmail.id',
 						'member_username'=>'def',
-						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
+						'member_password'=>'$2y$10$w8GwRj7VPqGD/5gFK6MHU.RADsw4/du9KIvOs8jiX/u.LtHSf76bu',
 						'member_birth_date'=>'1990-02-02',
 						'member_gender'=>'p',
 						'member_coin'=>'999999',
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
 						'member_name'=>'GHI',
 						'member_email'=>'ghi@gmail.id',
 						'member_username'=>'ghi',
-						'member_password'=>'$2y$10$UfwJR.Zg4z7.h5H.oTqddeEVLThYTvNnNyebs.iOl2H2b6jo0eEYq',
+						'member_password'=>'$2y$10$w8GwRj7VPqGD/5gFK6MHU.RADsw4/du9KIvOs8jiX/u.LtHSf76bu',
 						'member_birth_date'=>'1990-03-03',
 						'member_gender'=>'l',
 						'member_coin'=>'0',

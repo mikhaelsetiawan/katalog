@@ -14,7 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -27,5 +26,10 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+		Route::group(['prefix' => '/'], function () {
+				Route::get('register','controller_frontend@register');
+				Route::post('register','controller_frontend@submitRegister');
+				Route::get('login','controller_frontend@login');
+				Route::post('login','controller_frontend@authLogin');
+		});
 });

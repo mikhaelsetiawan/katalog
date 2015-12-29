@@ -17,7 +17,7 @@ class CreateModelMember extends Migration
 						$table->string('member_name',255);
 						$table->string('member_email',254)->unique();
 						$table->string('member_username',100);
-						$table->string('member_password',32);
+						$table->string('member_password',60);
 						$table->date('member_birth_date');
 						$table->char('member_gender', 1);
 						$table->string('member_fb',100);

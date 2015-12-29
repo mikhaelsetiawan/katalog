@@ -3096,5 +3096,105 @@
         ],
         "description": "Symfony DomCrawler Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "illuminate/html",
+        "version": "v5.0.0",
+        "version_normalized": "5.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/illuminate/html.git",
+            "reference": "3d1009bb8e0f25720c914af5c1f4015dd373c9ef"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/illuminate/html/zipball/3d1009bb8e0f25720c914af5c1f4015dd373c9ef",
+            "reference": "3d1009bb8e0f25720c914af5c1f4015dd373c9ef",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/http": "~5.0",
+            "illuminate/session": "~5.0",
+            "illuminate/support": "~5.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2015-01-01 16:31:18",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "5.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Illuminate\\Html\\": ""
+            },
+            "files": [
+                "helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com"
+            }
+        ]
+    },
+    {
+        "name": "kbwebs/multiauth",
+        "version": "v1.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Kbwebs/MultiAuth.git",
+            "reference": "be6b2780fc63b92a956a332f781e43023cfb8233"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Kbwebs/MultiAuth/zipball/be6b2780fc63b92a956a332f781e43023cfb8233",
+            "reference": "be6b2780fc63b92a956a332f781e43023cfb8233",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/auth": "~5.1",
+            "illuminate/console": "~5.1",
+            "illuminate/database": "~5.1",
+            "illuminate/filesystem": "~5.1",
+            "illuminate/support": "~5.1",
+            "php": ">=5.5.9"
+        },
+        "time": "2015-09-12 08:04:15",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Kbwebs\\MultiAuth\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kasper Basse",
+                "email": "kasperbasse@gmail.com"
+            }
+        ],
+        "description": "MultiAuth for Laravel 5.1",
+        "keywords": [
+            "auth",
+            "laravel",
+            "login",
+            "multi",
+            "multiauth",
+            "signin",
+            "user"
+        ]
     }
 ]
