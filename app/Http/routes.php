@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', "controller_home@index");
 /*
 |--------------------------------------------------------------------------
 | Application Routes
