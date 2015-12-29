@@ -32,6 +32,11 @@ class model_member extends Model implements AuthenticatableContract, CanResetPas
 
 	}
 
+	public function city()
+	{
+		return $this->belongsTo('App\Models\model_ext_city','city_code', 'city_code');
+	}
+
 	public function getAuthPassword() {
 		return $this->member_password;
 	}
