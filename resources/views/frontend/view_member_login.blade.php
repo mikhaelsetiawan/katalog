@@ -23,7 +23,13 @@
 							<div class="form-group">
 								<label class="col-md-4 control-label">Email</label>
 								<div class="col-md-6">
-                  <input class="form-control" value="{{ old('member_email')  }}" type="email" name="member_email" id="email"/>
+                  {{--<input class="form-control" value="{{ old('member_email')  }}" type="email" name="member_email" id="email"/>--}}
+                  {!! Form::input('email','member_email',null, [
+                                  'id'    => 'email',
+                                  'class' => 'form-control',
+                                  'value' => old('member_email'),
+                                  'placeholder' => 'Email'
+                                  ]) !!}
 									{{--<input type="email" class="form-control" name="email" value="{{ old('email') }}">--}}
 								</div>
 							</div>
