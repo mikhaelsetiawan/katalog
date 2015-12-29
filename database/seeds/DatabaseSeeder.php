@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
 			$this->call(BusinessTableSeeder::class);
 			$this->call(BusinessfieldTableSeeder::class);
 			$this->call(BuildingTableSeeder::class);
+			$this->call(MemberaffTableSeeder::class);
 
     }
 }
@@ -102,17 +103,14 @@ class DatabaseSeeder extends Seeder
 			DB::table('business')->delete();
 			DB::table('business')->insert(array(
 					[
-						'member_id'=>'1',
 						'business_name'=>'PT. Jaya ABC',
 						'business_email'=>'abc@gmail.com'
 					],
 					[
-						'member_id'=>'2',
 						'business_name'=>'PT. DEF Maju',
 						'business_email'=>'def@gmail.com'
 					],
 					[
-						'member_id'=>'3',
 						'business_name'=>'Toko Super GHI',
 						'business_email'=>'ghi@gmail.com'
 					]
@@ -206,5 +204,26 @@ class DatabaseSeeder extends Seeder
 						'province_name'=>'Jakarta'
 					]
 				));
+		}
+	}
+
+	class memberaffTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('member_affiliation')->delete();
+			DB::table('member_affiliation')->insert(array(
+					[
+						'member_id' => '1',
+						'business_id' => '1',
+						'maff_role' => 'owner'
+					],
+					[
+						'member_id' => '2',
+						'business_id' => '2',
+						'maff_role' => 'owner'
+					]
+				)
+			);
 		}
 	}
