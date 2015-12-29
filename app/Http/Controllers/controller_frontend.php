@@ -56,6 +56,7 @@ class controller_frontend extends Controller {
 
 		$member = new model_member();
 		$request['member_coin'] = 100;
+		$request['member_password'] = bcrypt($request['member_password']);
 		if($member->create($request->except('member_password_confirmation')))
 		{
 			return redirect('home');

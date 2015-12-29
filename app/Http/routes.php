@@ -30,4 +30,9 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('login','controller_frontend@login');
 				Route::post('login','controller_frontend@authLogin');
 		});
+
+		Route::group(['prefix' => 'backend'], function () {
+				Route::get('member','backend\controller_member@index');
+				Route::post('editMember','backend\controller_member@editMember');
+		});
 });
