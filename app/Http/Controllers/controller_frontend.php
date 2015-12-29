@@ -14,6 +14,12 @@ class controller_frontend extends Controller {
 		//$this->middleware('auth');
 	}
 
+    public function index() {
+      
+      return view('frontend.view_home');
+    
+    }
+  
 	public function register() {
 		$model_ext_city = model_ext_city::all()->pluck('city_name','city_code');
 		return view('frontend.view_member_register')->with([
