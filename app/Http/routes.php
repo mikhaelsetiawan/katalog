@@ -43,5 +43,17 @@ Route::group(['middleware' => ['web']], function () {
 
 				Route::get('city','backend\controller_city@index');
 				Route::post('editCity','backend\controller_city@editCity');
+
+				Route::get('business','backend\controller_business@index');
+				Route::post('editBusiness','backend\controller_business@editBusiness');
+
+				Route::get('bfield','backend\controller_bfield@index');
+				Route::post('editBfield','backend\controller_bfield@editBfield');
+
+				Route::get('building','backend\controller_building@index');
+				Route::post('editBuilding','backend\controller_building@editBuilding');
+
+				Route::get('maff','backend\controller_maff@index');
+				Route::post('editMaff','backend\controller_maff@editMaff');
 		});
 });
