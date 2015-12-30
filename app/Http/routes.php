@@ -55,5 +55,8 @@ Route::group(['middleware' => ['web']], function () {
 
 				Route::get('maff','backend\controller_maff@index');
 				Route::post('editMaff','backend\controller_maff@editMaff');
+
+				Route::get('admin','backend\controller_admin@index');
+				Route::post('editAdmin','backend\controller_admin@editAdmin');
 		});
 });
