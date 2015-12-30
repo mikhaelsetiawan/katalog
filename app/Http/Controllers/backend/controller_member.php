@@ -18,7 +18,7 @@ class controller_member extends Controller {
 	public function index()
 	{
 		$model_member = model_member::where(array('member_status'=>'1'))->get();
-		$model_ext_city = model_ext_city::all()->pluck('city_name','city_code');
+		$model_ext_city = model_ext_city::all()->sortBy('city_name')->pluck('city_name','city_code');
 		return view('backend.member.index')->with([
 				'model_member' => $model_member,
 				'model_city' => $model_ext_city

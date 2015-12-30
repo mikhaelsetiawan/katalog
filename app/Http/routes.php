@@ -34,5 +34,14 @@ Route::group(['middleware' => ['web']], function () {
 		Route::group(['prefix' => 'backend'], function () {
 				Route::get('member','backend\controller_member@index');
 				Route::post('editMember','backend\controller_member@editMember');
+
+				Route::get('country','backend\controller_country@index');
+				Route::post('editCountry','backend\controller_country@editCountry');
+
+				Route::get('province','backend\controller_province@index');
+				Route::post('editProvince','backend\controller_province@editProvince');
+
+				Route::get('city','backend\controller_city@index');
+				Route::post('editCity','backend\controller_city@editCity');
 		});
 });
