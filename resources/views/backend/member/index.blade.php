@@ -141,6 +141,36 @@
             <div class="cb"></div>
         </div>
     </div>
+
+    <div class="popup-box" id="popup-reset">
+        <div class="popup-header"></div>
+        <div class="popup-body">
+            <form id="form-popup-reset" class="form-horizontal" action="{{{ action('backend\controller_member@resetPass') }}}" method="post" role="form">
+                <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+                <input type="hidden" name="member_id" id="reset_key" value="" />
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        Are you sure wants to reset this member password?
+                    </div>
+                </div>
+                <div class="popup-buttons">
+                    <div class="btn-group fr" onclick="$('#form-popup-reset').submit()">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <span class="hidden-sm" style="margin-left: 6px;">OK</span>
+                        </button>
+                    </div>
+                    <div class="btn-group fr" onclick="closePopup()" style="margin-right: 10px;">
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            <span class="hidden-sm" style="margin-left: 6px;">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="cb"></div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -203,6 +233,13 @@
                   <span class="hidden-xs" style="margin-left: 5px;">Delete</span>
                 </button>
               </div>
+              <br/>
+              <div class="btn-group" style="margin-top: 5px;" onclick='popupReset("{{{ $member['member_id'] }}}")'>
+                <button type="button" class="btn btn-success btn-xs" style="width: 126px;">
+                  <span class="glyphicon glyphicon-trash"></span>
+                  <span class="hidden-xs" style="margin-left: 5px;">Reset</span>
+                </button>
+              </div>
             </td>
 						<td>{!! $member['member_name'] !!}</td>
 						<td>{!! $member['member_email'] !!}</td>
@@ -244,6 +281,11 @@
             );
 		} );
 
+    function resetPass()
+    {
+
+    }
+
 		function popupEdit(id,name,email,username,birth_date,gender,fb,coin,city)
 		{
 		    $('.popup-header').html('Form Edit Data');
@@ -281,6 +323,13 @@
 		    $('.popup-header').html('Form Delete Data');
 		    $("#delete_key").val(key);
 		    openPopup("popup-delete");
+		}
+
+		function popupReset(key)
+		{
+		    $('.popup-header').html('Form Reset Data');
+		    $("#reset_key").val(key);
+		    openPopup("popup-reset");
 		}
 	</script>
 @endsection

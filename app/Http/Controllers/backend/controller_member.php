@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class controller_member extends Controller {
-
+	//Reminder : buat email baru hati2 unique, kalau sudah hapus tidak bisa buat dengan email yang sama
 	public function __construct()
 	{
 		//$this->middleware('auth');
@@ -25,6 +25,26 @@ class controller_member extends Controller {
 			]);
 	}
 
+	public function resetPass()
+	{
+		$err = array();
+		$model_member = new model_member();
+		$_POST['member_password'] = $model_member->genPass();
+		$_POST['sendPass'] = $_POST['member_password'];
+		$_POST['member_password'] = bcrypt($_POST['member_password']);
+
+		$model_member = model_member::find($_POST['member_id']);
+		$model_member->fill($_POST);
+		if($model_member->save())
+		{
+			$data = $_POST;
+			$data['member_email'] = $model_member->member_email;
+			$data['member_name'] = $model_member->member_name;
+			$model_member->emailResetPass($data);
+		}
+		return redirect('/backend/member')->withErrors($err);
+	}
+
 	public function editMember()
 	{
 		$err = array();
@@ -35,7 +55,14 @@ class controller_member extends Controller {
 		}else{
 			if ($_POST['_type'] == 1) {
 				$model_member = new model_member();
-				$model_member->create($_POST);
+				$_POST['member_password'] = $model_member->genPass();
+				$_POST['sendPass'] = $_POST['member_password'];
+				$_POST['member_password'] = bcrypt($_POST['member_password']);
+				if($model_member->create($_POST))
+				{
+					$data = $_POST;
+					$model_member->emailGenPass($data);
+				}
 			}else if ($_POST['_type'] == 2) {
 				$model_member = model_member::find($_POST['member_id']);
 				$model_member->fill($_POST);

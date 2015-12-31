@@ -27,13 +27,19 @@ Route::group(['middleware' => ['web']], function () {
 		Route::group(['prefix' => '/'], function () {
 				Route::get('register','controller_frontend@register');
 				Route::post('register','controller_frontend@submitRegister');
+
 				Route::get('login','controller_frontend@login');
 				Route::post('login','controller_frontend@authLogin');
+		});
+
+		Route::group(['prefix' => '/business'], function () {
+
 		});
 
 		Route::group(['prefix' => 'backend'], function () {
 				Route::get('member','backend\controller_member@index');
 				Route::post('editMember','backend\controller_member@editMember');
+				Route::post('resetPass','backend\controller_member@resetPass');
 
 				Route::get('country','backend\controller_country@index');
 				Route::post('editCountry','backend\controller_country@editCountry');
@@ -58,5 +64,6 @@ Route::group(['middleware' => ['web']], function () {
 
 				Route::get('admin','backend\controller_admin@index');
 				Route::post('editAdmin','backend\controller_admin@editAdmin');
+				Route::post('resetPass','backend\controller_admin@resetPass');
 		});
 });
