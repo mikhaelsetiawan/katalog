@@ -85,3 +85,7 @@ nav ul.sub li {
 main {
   padding-left: 10%;
 }
+
+table thead {
+  background-color: #EEEEEE;
+}
