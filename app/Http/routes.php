@@ -11,6 +11,7 @@
 |
 */
 Route::get('/','controller_frontend@index');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
