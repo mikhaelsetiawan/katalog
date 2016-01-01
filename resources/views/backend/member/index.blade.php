@@ -1,4 +1,4 @@
-@extends('backend')
+@extends('backend.view_backend_index')
 
 @section('popup')
 <div class="popup-overlay">
@@ -193,7 +193,7 @@
 <div class="row">
 	<div class="col-md-10 col-md-offset-1">
 		<table id="table_member" style="width:100%" class="table table-striped table-bordered dataTable table-hover no-footer">
-			<thead>
+			<thead style="background-color: #EEEEEE;">
 				<tr>
 					<th style="width: 115px;">Action</th>
 					<th>Name</th>

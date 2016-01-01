@@ -11,7 +11,6 @@
 |
 */
 Route::get('/','controller_frontend@index');
-Route::get('/backend','controller_backend@index');
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -43,7 +42,9 @@ Route::group(['middleware' => ['web']], function () {
 		});
 
 		Route::group(['prefix' => 'backend'], function () {
-				Route::get('member','backend\controller_member@index');
+        Route::get('','controller_backend@index');
+				
+        Route::get('member','backend\controller_member@index');
 				Route::post('editMember','backend\controller_member@editMember');
 				Route::post('resetPass','backend\controller_member@resetPass');
 

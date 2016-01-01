@@ -6,9 +6,9 @@
           Hello
         </td>
         <td align="right">
-          <a href="register">Register</a>
+          Administrator
           &nbsp; | &nbsp;
-          <a href="login">Sign In</a>
+          <a href="logout">Logout</a>
         </td>
       </tr>
     </tbody>
