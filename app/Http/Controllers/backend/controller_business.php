@@ -2,8 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\model_building;
 use App\Models\model_business;
 
+use App\Models\model_business_field;
 use Illuminate\Http\Request;
 
 class controller_business extends Controller {
@@ -17,10 +19,14 @@ class controller_business extends Controller {
 	{
 		$model_business = model_business::where(array('business_status'=>'1'))->get();
 		$model_business_parent = model_business::where('business_status','1')->orderBy('business_name')->pluck('business_name','business_id')->toArray();
+		$model_bfield = model_business_field::where('bfield_status','1')->orderBy('bfield_name')->pluck('bfield_name','bfield_id')->toArray();
+		$model_building = model_building::where('building_status','1')->orderBy('building_name')->pluck('building_name','building_id')->toArray();
 		$model_business_parent = ['0'=>'No Parent'] + $model_business_parent;
 		return view('backend.business.index')->with([
 				'model_business' => $model_business,
 				'model_business_parent' => $model_business_parent,
+				'model_bfield' => $model_bfield,
+				'model_building' => $model_building
 			]);
 	}
 

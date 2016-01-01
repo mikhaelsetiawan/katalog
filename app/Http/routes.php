@@ -33,7 +33,13 @@ Route::group(['middleware' => ['web']], function () {
 		});
 
 		Route::group(['prefix' => '/business'], function () {
+				Route::get('addBusiness','controller_business@addBusiness');
+				Route::post('submitAddBusiness','controller_business@submitAddBusiness');
+				Route::post('addNewBfield','controller_business@addNewBfield');
+				Route::post('getProv','controller_business@getProv');
+				Route::post('getCity','controller_business@getCity');
 
+				Route::get('success','controller_business@successAddBusiness');
 		});
 
 		Route::group(['prefix' => 'backend'], function () {

@@ -6,7 +6,6 @@ class model_building extends Model{
 	protected $table = 'building';
 	protected $primaryKey = 'building_id';
 	protected $fillable = [
-		'business_id',
 		'city_code',
 		'building_name',
 		'building_address',
@@ -20,11 +19,6 @@ class model_building extends Model{
 
 	public function fields() {
 
-	}
-
-	public function business()
-	{
-		return $this->belongsTo('App\Models\model_business','business_id', 'business_id');
 	}
 
 	public function city()

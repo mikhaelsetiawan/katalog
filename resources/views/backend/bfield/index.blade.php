@@ -27,13 +27,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="business">Business : </label>
-                    <div class="col-sm-10">
-                    {!! Form::select('business_id', $model_business, null, ['class' => 'form-control', 'id'=>'edit_business_id']) !!}
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label col-sm-2" for="bfield_parent">Parent : </label>
                   <div class="col-md-10">
                     {!! Form::select('bfield_parent', $model_bfield_parent, null, ['class' => 'form-control', 'id'=>'edit_bfield_parent']) !!}
@@ -110,7 +103,6 @@
 				<tr>
 					<th style="width: 115px;">Action</th>
 					<th>Name</th>
-					<th>Business</th>
 					<th>Parent</th>
 				</tr>
 			</thead>
@@ -122,7 +114,6 @@
                   popupEdit(
                   "{{{ $bfield['bfield_id'] }}}",
                   "{{{ $bfield['bfield_name'] }}}",
-                  "{{{ $bfield->business->business_id }}}",
                   "{{{ $bfield['bfield_parent'] }}}"
                   )'>
                   <button type="button" class="btn btn-primary btn-xs">
@@ -138,7 +129,6 @@
               </div>
             </td>
 						<td>{!! $bfield['bfield_name'] !!}</td>
-						<td>{!! $bfield->business->business_name !!}</td>
 						<td>{!! $bfield->parentName() !!}</td>
 					</tr>
 				@endforeach
@@ -172,13 +162,12 @@
             );
 		} );
 
-		function popupEdit(id,name,business_id,parent)
+		function popupEdit(id,name,parent)
 		{
 		    $('.popup-header').html('Form Edit Data');
 		    $("#_type").val('2');
 		    $("#edit_bfield_id").val(id);
 		    $("#edit_bfield_name").val(name);
-		    $("#edit_business_id").val(business_id);
 		    $("#edit_bfield_parent").val(parent);
 		    openPopup("popup-edit");
 		}
@@ -189,7 +178,6 @@
 		    $("#_type").val('1');
 		    $("#edit_bfield_id").val("");
 		    $("#edit_bfield_name").val("");
-		    $("#edit_business_id").val("");
 		    $("#edit_bfield_parent").val("");
 		    openPopup("popup-edit");
 		}

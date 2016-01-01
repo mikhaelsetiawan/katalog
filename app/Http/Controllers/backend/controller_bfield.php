@@ -16,12 +16,10 @@ class controller_bfield extends Controller {
 
 	public function index()
 	{
-		$model_business = model_business::where(array('business_status'=>'1'))->orderBy('business_name')->pluck('business_name','business_id')->toArray();
 		$model_bfield = model_business_field::where(array('bfield_status'=>'1'))->get();
 		$model_bfield_parent = model_business_field::where('bfield_status','1')->orderBy('bfield_name')->pluck('bfield_name','bfield_id')->toArray();
 		$model_bfield_parent = ['0'=>'No Parent'] + $model_bfield_parent;
 		return view('backend.bfield.index')->with([
-				'model_business' => $model_business,
 				'model_bfield' => $model_bfield,
 				'model_bfield_parent' => $model_bfield_parent,
 			]);

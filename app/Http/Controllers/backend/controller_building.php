@@ -18,11 +18,9 @@ class controller_building extends Controller {
 	public function index()
 	{
 		$model_building = model_building::where(array('building_status'=>'1'))->get();
-		$model_business = model_business::where('business_status','1')->orderBy('business_name')->pluck('business_name','business_id')->toArray();
 		$model_ext_city = model_ext_city::all()->sortBy('city_name')->pluck('city_name','city_code')->toArray();
 		return view('backend.building.index')->with([
 				'model_building' => $model_building,
-				'model_business' => $model_business,
 				'model_city' => $model_ext_city
 			]);
 	}

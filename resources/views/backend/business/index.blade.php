@@ -35,6 +35,30 @@
                                         ]) !!}
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="business_email">Url : </label>
+                    <div class="col-sm-10">
+                        {!! Form::input('text','business_url',null, [
+                                        'id'    => 'edit_business_url',
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Url'
+                                        ]) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="city_code">Building : </label>
+                  <div class="col-md-10">
+                    {!! Form::select('building_id', $model_building, null, ['class' => 'form-control', 'id'=>'edit_building_id']) !!}
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="city_code">Business Category : </label>
+                  <div class="col-md-10">
+                    {!! Form::select('bfield_id', $model_bfield, null, ['class' => 'form-control', 'id'=>'edit_bfield_id']) !!}
+                  </div>
+                </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="city_code">Parent : </label>
@@ -114,6 +138,9 @@
 					<th style="width: 115px;">Action</th>
 					<th>Name</th>
 					<th>Email</th>
+					<th>Url</th>
+					<th>Building</th>
+					<th>Category</th>
 					<th>Parent</th>
 				</tr>
 			</thead>
@@ -126,6 +153,9 @@
                   "{{{ $business['business_id'] }}}",
                   "{{{ $business['business_name'] }}}",
                   "{{{ $business['business_email'] }}}",
+                  "{{{ $business['business_url'] }}}",
+                  "{{{ $business->building['building_id'] }}}",
+                  "{{{ $business->bfield['bfield_id'] }}}",
                   "{{{ $business['business_parent'] }}}"
                   )'>
                   <button type="button" class="btn btn-primary btn-xs">
@@ -142,6 +172,9 @@
             </td>
 						<td>{!! $business['business_name'] !!}</td>
 						<td>{!! $business['business_email'] !!}</td>
+						<td>{!! $business['business_url'] !!}</td>
+						<td>{!! $business->building['building_name'] !!}</td>
+						<td>{!! $business->bfield['bfield_name'] !!}</td>
 						<td>{!! $business->parentName() !!}</td>
 					</tr>
 				@endforeach
@@ -175,13 +208,16 @@
             );
 		} );
 
-		function popupEdit(id,name,email,parent)
+		function popupEdit(id,name,email,url,building_id,bfield_id,parent)
 		{
 		    $('.popup-header').html('Form Edit Data');
 		    $("#_type").val('2');
 		    $("#edit_business_id").val(id);
 		    $("#edit_business_name").val(name);
 		    $("#edit_business_email").val(email);
+		    $("#edit_business_url").val(url);
+		    $("#edit_building_id").val(building_id);
+		    $("#edit_bfield_id").val(bfield_id);
 		    $("#edit_business_parent").val(parent);
 		    openPopup("popup-edit");
 		}
@@ -193,6 +229,9 @@
 		    $("#edit_business_id").val("");
 		    $("#edit_business_name").val("");
 		    $("#edit_business_email").val("");
+		    $("#edit_business_url").val("");
+		    $("#edit_building_id").val("");
+		    $("#edit_bfield_id").val("");
 		    $("#edit_business_parent").val("");
 		    openPopup("popup-edit");
 		}

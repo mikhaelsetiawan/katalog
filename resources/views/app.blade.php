@@ -57,6 +57,13 @@
 		</div>
 	</nav>
 
+	<!-- Scripts -->
+	{!! Html::script('js/jquery.js'); !!}
+	{!! Html::style('js/DataTable/media/css/font-awesome.min.css') !!}
+	{!! Html::script('js/bootstrap.min.js'); !!}
+
+	{!! Html::script('js/main.js'); !!}
+
 	@yield('content')
 	@yield('page-script')
 

@@ -7,7 +7,6 @@ class model_business_field extends Model{
 	protected $table = 'business_field';
 	protected $primaryKey = 'bfield_id';
 	protected $fillable = [
-		'business_id',
 		'bfield_name',
 		'bfield_parent',
 	];
@@ -22,7 +21,7 @@ class model_business_field extends Model{
 
 	public function business()
 	{
-		return $this->belongsTo('App\Models\model_business','business_id', 'business_id');
+		return $this->hasMany('App\Models\model_business','bfield_id', 'bfield_id');
 	}
 
 	public function parentName()

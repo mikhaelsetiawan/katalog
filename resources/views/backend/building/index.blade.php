@@ -27,13 +27,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="city_code">Business : </label>
-                  <div class="col-md-10">
-                    {!! Form::select('business_id', $model_business, null, ['class' => 'form-control', 'id'=>'edit_business_id']) !!}
-                  </div>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label col-sm-2" for="city_code">City : </label>
                   <div class="col-md-10">
                     {!! Form::select('city_code', $model_city, null, ['class' => 'form-control', 'id'=>'edit_city_code']) !!}
@@ -66,7 +59,7 @@
                     <label class="control-label col-sm-2" for="building_name">Lng : </label>
                     <div class="col-sm-10">
                         {!! Form::input('text','building_lng',null, [
-                                        'id'    => 'edit_building_longitude',
+                                        'id'    => 'edit_building_lng',
                                         'class' => 'form-control',
                                         'placeholder' => 'Longitude'
                                         ]) !!}
@@ -143,7 +136,6 @@
 				<tr>
 					<th style="width: 115px;">Action</th>
 					<th>Name</th>
-					<th>Business</th>
 					<th>City</th>
 					<th>Address</th>
 					<th>Lat</th>
@@ -158,7 +150,6 @@
                   popupEdit(
                   "{{{ $building['building_id'] }}}",
                   "{{{ $building['building_name'] }}}",
-                  "{{{ $building['business_id'] }}}",
                   "{{{ $building['city_code'] }}}",
                   "{{{ $building['building_address'] }}}",
                   "{{{ $building['building_lat'] }}}",
@@ -177,7 +168,6 @@
               </div>
             </td>
 						<td>{!! $building['building_name'] !!}</td>
-						<td>{!! $building->business->business_name !!}</td>
 						<td>{!! $building->city->city_name !!}</td>
 						<td>{!! $building['building_address'] !!}</td>
 						<td>{!! $building['building_lat'] !!}</td>
@@ -214,13 +204,12 @@
             );
 		} );
 
-		function popupEdit(id,name,business_id,city_code,address,lat,lng)
+		function popupEdit(id,name,city_code,address,lat,lng)
 		{
 		    $('.popup-header').html('Form Edit Data');
 		    $("#_type").val('2');
 		    $("#edit_building_id").val(id);
 		    $("#edit_building_name").val(name);
-		    $("#edit_business_id").val(business_id);
 		    $("#edit_city_code").val(city_code);
 		    $("#edit_building_address").val(address);
 		    $("#edit_building_lat").val(lat);
