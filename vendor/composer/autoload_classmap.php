@@ -7,9 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CreateModelAdmin' => $baseDir . '/database/migrations/2015_12_28_000001_create_model_admin.php',
-    'CreateModelBuilding' => $baseDir . '/database/migrations/2015_12_28_080739_create_model_building.php',
+    'CreateModelBuilding' => $baseDir . '/database/migrations/2015_12_28_080308_create_model_building.php',
     'CreateModelBusiness' => $baseDir . '/database/migrations/2015_12_28_080310_create_model_business.php',
-    'CreateModelBusinessField' => $baseDir . '/database/migrations/2015_12_28_081333_create_model_business_field.php',
+    'CreateModelBusinessClaim' => $baseDir . '/database/migrations/2016_01_01_105036_create_model_business_claim.php',
+    'CreateModelBusinessField' => $baseDir . '/database/migrations/2015_12_28_080309_create_model_business_field.php',
     'CreateModelExtCity' => $baseDir . '/database/migrations/2015_12_28_000004_create_model_ext_city.php',
     'CreateModelExtCountry' => $baseDir . '/database/migrations/2015_12_28_000002_create_model_ext_country.php',
     'CreateModelExtProvince' => $baseDir . '/database/migrations/2015_12_28_000003_create_model_ext_province.php',
@@ -530,5 +531,6 @@ return array(
     'cityTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'countryTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'memberTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
+    'memberaffTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'provinceTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
 );

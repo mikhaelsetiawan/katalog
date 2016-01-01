@@ -33,6 +33,16 @@ class model_business extends Model{
 		return $this->belongsTo('App\Models\model_business_field','bfield_id', 'bfield_id');
 	}
 
+	public function maff()
+	{
+		return $this->hasMany('App\Models\model_member_affiliation','business_id', 'business_id');
+	}
+
+	public function claim()
+	{
+		return $this->hasMany('App\Models\model_business_claim','business_id', 'business_id');
+	}
+
 	public function parentName()
 	{
 		$model_business = model_business::find($this->business_parent);

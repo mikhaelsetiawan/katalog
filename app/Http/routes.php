@@ -34,12 +34,16 @@ Route::group(['middleware' => ['web']], function () {
 
 		Route::group(['prefix' => '/business'], function () {
 				Route::get('addBusiness','controller_business@addBusiness');
+				Route::get('list','controller_business@listBusiness');
+				Route::get('detail/{business_id}',['uses' =>'controller_business@detailBusiness']);
+				Route::post('submitClaimBusiness','controller_business@submitClaimBusiness');
 				Route::post('submitAddBusiness','controller_business@submitAddBusiness');
 				Route::post('addNewBfield','controller_business@addNewBfield');
 				Route::post('getProv','controller_business@getProv');
 				Route::post('getCity','controller_business@getCity');
 
 				Route::get('success','controller_business@successAddBusiness');
+				Route::get('successClaim','controller_business@successClaimBusiness');
 		});
 
 		Route::group(['prefix' => 'backend'], function () {
@@ -69,6 +73,9 @@ Route::group(['middleware' => ['web']], function () {
 
 				Route::get('maff','backend\controller_maff@index');
 				Route::post('editMaff','backend\controller_maff@editMaff');
+
+				Route::get('bclaim','backend\controller_bclaim@index');
+				Route::post('editBclaim','backend\controller_bclaim@editBclaim');
 
 				Route::get('admin','backend\controller_admin@index');
 				Route::post('editAdmin','backend\controller_admin@editAdmin');

@@ -2,9 +2,11 @@
 
 use App\Http\Requests;
 use App\Models\model_business_field;
+use App\Models\model_business_claim;
 use App\Models\model_ext_country;
 use App\Models\model_ext_province;
 use App\Models\model_ext_city;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use App\Models\model_member;
 use Illuminate\Support\Facades\Mail;
@@ -16,6 +18,38 @@ class controller_business extends Controller {
 	public function __construct()
 	{
 		//$this->middleware('auth');
+	}
+
+	public function listBusiness()
+	{
+		$model_business = model_business::all()->sortBy('bfield_name');
+		return view('frontend.business.view_list')->with([
+			'model_business' => $model_business,
+		]);
+	}
+
+	public function detailBusiness($business_id)
+	{
+		$member_id = auth()->guard('member')->user()->member_id;
+		$model_business = model_business::find($business_id);
+		$model_claim = model_business_claim::where(['business_id'=>$business_id,'member_id'=>$member_id,'bclaim_status'=>'1'])->get();
+		return view('frontend.business.view_detail')->with([
+			'business' => $model_business,
+				'alreadyClaim' => count($model_claim)
+		]);
+	}
+
+	public function submitClaimBusiness()
+	{
+		$err=array();
+		$member_id = auth()->guard('member')->user()->member_id;
+		$_POST['member_id'] = $member_id;
+
+		$model_bclaim = new model_business_claim();
+		$model_bclaim->fill($_POST);
+		$model_bclaim->save();
+
+		return redirect('/business/successClaim')->withErrors($err);
 	}
 
 	public function addBusiness()
@@ -63,6 +97,13 @@ class controller_business extends Controller {
 	public function successAddBusiness()
 	{
 		return view('frontend.business.view_success')->with([
+
+		]);
+	}
+
+	public function successClaimBusiness()
+	{
+		return view('frontend.business.view_success_claim')->with([
 
 		]);
 	}
