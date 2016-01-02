@@ -10,7 +10,6 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/','controller_frontend@index');
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +24,7 @@ Route::get('/','controller_frontend@index');
 
 Route::group(['middleware' => ['web']], function () {
 		Route::group(['prefix' => '/'], function () {
+				Route::get('','controller_frontend@index');
 				Route::get('register','controller_frontend@register');
 				Route::post('register','controller_frontend@submitRegister');
 

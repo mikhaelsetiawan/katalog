@@ -7,8 +7,8 @@
         </td>
         <td align="right">
           <ul id="user">
-          {{ $member_id = auth()->guard('member')->user()->member_id }}
-          @if ($member_id != '')            
+          {{--{{ $member_id = auth()->guard('member')->user()->member_id }}--}}
+          @if (auth()->guard('member')->check())
             <li><a href="{{ url('/login') }}">
               {{ "ASD" }}
             </a></li>

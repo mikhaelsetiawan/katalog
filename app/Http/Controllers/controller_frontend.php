@@ -15,7 +15,7 @@ class controller_frontend extends Controller {
 	}
 
   public function index() {
-    
+
     return view('frontend.view_frontend_index');
   
   }
