@@ -6,12 +6,16 @@ use App\Models\model_business_claim;
 use App\Models\model_ext_country;
 use App\Models\model_ext_province;
 use App\Models\model_ext_city;
+use App\Models\model_member_affiliation;
+use App\Models\model_news;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use App\Models\model_member;
 use Illuminate\Support\Facades\Mail;
 use App\Models\model_business;
 use App\Models\model_building;
+use DateTime;
 
 class controller_business extends Controller {
 
@@ -33,9 +37,13 @@ class controller_business extends Controller {
 		$member_id = auth()->guard('member')->user()->member_id;
 		$model_business = model_business::find($business_id);
 		$model_claim = model_business_claim::where(['business_id'=>$business_id,'member_id'=>$member_id,'bclaim_status'=>'1'])->get();
+		$model_maff = model_member_affiliation::where(['business_id'=>$business_id,'member_id'=>$member_id,'maff_status'=>'1'])->get();
+
 		return view('frontend.business.view_detail')->with([
+			'member_id' => $member_id,
 			'business' => $model_business,
-				'alreadyClaim' => count($model_claim)
+			'alreadyClaim' => count($model_claim),
+			'isOwner' => count($model_maff)
 		]);
 	}
 
@@ -92,6 +100,35 @@ class controller_business extends Controller {
 		$model_business->save();
 
 		return redirect('/business/success')->withErrors($err);
+	}
+
+	public function submitAddNews()
+	{
+		if($_POST['_type'] == 1)
+		{//new
+			$model_news =  new model_news();
+			$model_news ->fill($_POST);
+			if($model_news ->save())
+			{
+				$data = array();
+				$data['news_id'] = $model_news->news_id;
+				$data['created_at'] = date_format(new DateTime($model_news->created_at), 'd-M-Y H:i:s');
+				echo json_encode($data);
+			}else{
+				echo 0;
+			}
+		}elseif($_POST['_type'] == 2)
+		{//edit
+
+		}elseif($_POST['_type'] == 3)
+		{//delete
+			$model_news =  model_news::find($_POST['news_id']);
+			$model_news['news_status'] = 0;
+			if($model_news->save())
+			{
+				echo 1;
+			}
+		}
 	}
 
 	public function successAddBusiness()

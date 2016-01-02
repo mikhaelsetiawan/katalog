@@ -38,6 +38,7 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('detail/{business_id}',['uses' =>'controller_business@detailBusiness']);
 				Route::post('submitClaimBusiness','controller_business@submitClaimBusiness');
 				Route::post('submitAddBusiness','controller_business@submitAddBusiness');
+				Route::post('submitAddNews','controller_business@submitAddNews');
 				Route::post('addNewBfield','controller_business@addNewBfield');
 				Route::post('getProv','controller_business@getProv');
 				Route::post('getCity','controller_business@getCity');

@@ -1,0 +1,36 @@
+.div_news
+{
+	margin-top: 50px;
+}
+
+.div_news .item
+{
+	margin-top: 5px;
+	border-bottom: 1px solid #cccccc;
+}
+
+.div_news .item .title
+{
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.div_news .item .date
+{
+	text-align: right;
+	font-size: 11px;
+}
+
+.div_news .item .date .button_edit
+{
+	color: #0259C4;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.div_news .item .date .button_delete
+{
+	color: #b11f1f;
+	margin-right: 10px;
+	cursor: pointer;
+}

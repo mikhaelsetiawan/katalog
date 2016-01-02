@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
 			$this->call(BusinessfieldTableSeeder::class);
 			$this->call(BusinessTableSeeder::class);
 			$this->call(MemberaffTableSeeder::class);
+			$this->call(NewsTableSeeder::class);
 
     }
 }
@@ -225,6 +226,29 @@ class DatabaseSeeder extends Seeder
 						'member_id' => '2',
 						'business_id' => '2',
 						'maff_role' => 'owner'
+					]
+				)
+			);
+		}
+	}
+
+	class newsTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('news')->delete();
+			DB::table('news')->insert(array(
+					[
+						'member_id' => '1',
+						'business_id' => '1',
+						'news_title' => 'Diskon buka tahun 2016',
+						'news_content' => 'Kami mengadakan diskon buka tahun 2016, silahkan mengunjungi toko-toko cabang kami.',
+					],
+					[
+						'member_id' => '2',
+						'business_id' => '2',
+						'news_title' => 'Peluncuran produk baru',
+						'news_content' => 'Kami telah meluncurkan sebuah produk baru. Hadirilah acara peluncuran produk baru kami',
 					]
 				)
 			);

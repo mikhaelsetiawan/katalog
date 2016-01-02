@@ -16,6 +16,7 @@ return array(
     'CreateModelExtProvince' => $baseDir . '/database/migrations/2015_12_28_000003_create_model_ext_province.php',
     'CreateModelMember' => $baseDir . '/database/migrations/2015_12_28_074826_create_model_member.php',
     'CreateModelMemberAffiliation' => $baseDir . '/database/migrations/2015_12_29_105951_create_model_member_affiliation.php',
+    'CreateModelNews' => $baseDir . '/database/migrations/2016_01_02_062749_create_model_news.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
