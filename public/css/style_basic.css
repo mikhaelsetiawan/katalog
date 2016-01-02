@@ -1,0 +1,91 @@
+html, body {
+    height: 100%;
+    background-image: url("../img/backend_background-tile.png");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: table;
+    font-weight: 100;
+    font-family: 'Arial';
+}
+
+.container {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.content {
+    text-align: center;
+    display: inline-block;
+}
+
+.title {
+    font-size: 96px;
+}
+header{
+  height:40px;
+  background-color: #111111;
+  color: white;
+  padding: 5px 50px;
+  border-bottom: 1px solid gray;
+}
+
+
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+a:visited {
+  color: inherit;
+}
+a:hover {
+  color: blue;
+}
+
+nav {
+   background-color: #111111;
+   width: 200px;
+   position: fixed;
+   height: 100%;
+   color: #CCCCCC;
+   width: 10%;
+}
+
+nav ul {
+  padding: 0px;
+  list-style : none;
+  margin: 0px;
+}
+nav ul li {
+  padding: 5px 10px;
+  border-bottom: 1px solid white;
+  transition: color 0.5s, background-color 0.5s;
+}
+nav ul li:hover { 
+  cursor: pointer;  
+  background-color: #DDDDDD;
+  color: black;
+}
+
+nav ul.sub {
+  display : none;
+  text-decoration: none;
+}
+nav ul.sub li {
+  border:none;
+  padding: 5px 30px;
+  border-bottom: 1px solid white;
+}
+
+main {
+  padding-left: 10%;
+}
+
+table thead {
+  background-color: #EEEEEE;
+}

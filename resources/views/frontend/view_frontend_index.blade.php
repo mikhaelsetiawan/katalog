@@ -2,73 +2,34 @@
 <html>
     <head>
         <title>Katalog</title>
-        <style>
-            html, body {
-                height: 100%;
-            }
+          <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+          <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                display: table;
-                font-weight: 100;
-                font-family: 'Arial';
-            }
+          <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+          <link href="{{ asset('/css/main.css') }}" rel="stylesheet">
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
+          {!! Html::script('js/main.js'); !!}
+          {!! Html::style('js/DataTable/media/css/font-awesome.min.css') !!}
+          {!! Html::style('js/DataTable/media/css/jquery.dataTables.min.css') !!}
 
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
+          {!! Html::style('js/DataTable/media/css/dataTables.tableTools.css') !!}
+          {!! Html::script('js/DataTable/media/js/jquery.dataTables.min.js'); !!}
+          {!! Html::script('js/DataTable/media/js/dataTables.tableTools.min.js'); !!}
 
-            .title {
-                font-size: 96px;
-            }
-            header{
-              height:40px;
-              background-color: skyblue;
-              color: white;
-              padding: 5px 50px;
-            }
-            a {
-              text-decoration: none;
-              color: inherit;
-              transition: all 0.5s;
-            }
-            a:visited {
-              color: inherit;
-            }
-            a:hover {
-              color: blue;
-            }
-            
-        </style>
+
+        <link href="{{ asset('/css/style_frontend.css') }}" rel="stylesheet">
     </head>
     <body>
-      <header>
+      @yield('popup')
+      @include('frontend.view_frontend_header')
+      @include('frontend.view_frontend_nav')
+      <main>
+        @yield('content')
+      @yield('page-script')
+      </main>
       
-        <table style="width:100%">
-          <tbody>
-            <tr>
-              <td width='75%'>
-                Hello
-              </td>
-              <td align="right">
-                <a href="register">Register</a>
-                &nbsp; | &nbsp;
-                <a href="login">Sign In</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </header>
-      <main></main>
-      <footer></footer>
+      
     </body>
 </html>
+
