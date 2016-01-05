@@ -31,7 +31,7 @@
           </li>
         </ul>
             <ul class="sub" id="master_sub">
-              <a href="member"><li> Member </li></a>
+              <a href="{{ action('backend\controller_member@index') }}"><li> Member </li></a>
               <a href="business"><li> Business </li></a> 
               <a href="bfield"><li> Fields </li></a> 
               <a href="building"><li> Building </li></a> 
@@ -42,7 +42,8 @@
       </nav>
       <main>
         @yield('content')
-      @yield('page-script')
+        @yield('page-script')
+        @yield('testing')
       </main>
       
       

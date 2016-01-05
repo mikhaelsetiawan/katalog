@@ -17,6 +17,9 @@
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+    <style type="text/css">
+      #map { height: 100%; }
+    </style>
 </head>
 <body>
 @yield('popup')
@@ -68,7 +71,26 @@
 	{!! Html::script('js/DataTable/media/js/jquery.dataTables.min.js'); !!}
 	{!! Html::script('js/DataTable/media/js/dataTables.tableTools.min.js'); !!}
 	@yield('content')
-	@yield('page-script')
+	@yield('page-script')asdfadsfasdf
+    <div id="map"></div>
+    <script type="text/javascript">
+
+var map;
+function initMap() {
+alert('z');
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+  });
+}
+
+		$(document).ready(function() {
+		    initMap();
+		});
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2EnG_QKTlVAVCEkfba_rlej5-rbC0sSI&callback=initMap">
+    </script>
 
 
 </body>
