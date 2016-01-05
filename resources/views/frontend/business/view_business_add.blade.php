@@ -1,6 +1,11 @@
 @extends('app')
 
 @section('page-script')
+
+	<style type="text/css">
+	  #map { height: 300px;width: 300px; }
+	</style>
+
   <script>
     $(document).ready(function()
     {
@@ -64,6 +69,7 @@
         if($("input[name='building_type'][value='3']").is(':checked'))
         {
           $('#private_building').show();
+          initMap();
         }else{
           $('#private_building').hide();
         }
@@ -79,7 +85,123 @@
         $('#bfield_id').trigger('change');
       });
     }
+
+		function submitFormBuilding()
+		{
+		  if(countMark > 0)
+		  {
+        var lat =  markersArray[0].getPosition().lat();
+        var lng = markersArray[0].getPosition().lng();
+        $("#edit_building_lat").val(lat);
+        $("#edit_building_lng").val(lng);
+      }else{
+        $("#edit_building_lat").val("");
+        $("#edit_building_lng").val("");
+      }
+      $("#form-popup-edit").submit();
+		}
   </script>
+
+
+    <script type="text/javascript">
+    var map;
+    var markersArray = [];
+    var countMark = 0;
+
+    function initMap(inlat, inlng) {
+      markersArray = [];
+      countMark = 0;
+      var isFilled = false;
+      var lat = -7.257822;
+      var lng = 112.746998;
+
+      if(typeof inlat !== 'undefined' && inlat != '')
+      {
+      isFilled = true;
+        lat = inlat;
+      }
+
+      if(typeof inlng !== 'undefined' && inlat != '')
+      {
+      isFilled = true;
+        lng = inlng;
+      }
+
+      var mapOptions = {
+        zoom: 12,
+        center: new google.maps.LatLng(lat,lng),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      map = new google.maps.Map(document.getElementById('map'),mapOptions);
+
+      /*google.maps.event.addListener(map, 'click', function(event) {
+        addMarker(event.latLng);
+      });*/
+
+      if(isFilled == true)
+      {
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat,lng),
+          draggable:true,
+          animation: google.maps.Animation.DROP,
+  //        title:countMark+"",
+          title:"Your building location",
+          //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
+        });
+
+        google.maps.event.addListener(marker, 'dblclick', removeMark);
+
+        markersArray.push(marker);
+        markersArray[countMark].setMap(map);
+        countMark++;
+      }else{
+        google.maps.event.addListener(map, 'click', function(event) {
+          addMarker(event.latLng);
+        });
+      }
+    }
+
+    function addMarker(location) {
+      if(countMark == 0)
+      {
+        var x=location.lat();
+        var y=location.lng();
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable:true,
+          animation: google.maps.Animation.DROP,
+          title:"Your building location",
+          //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
+        });
+        countMark++;
+        google.maps.event.addListener(marker, 'dblclick', removeMark);
+        markersArray.push(marker);
+//        alert(countMark);
+      }
+    }
+
+    function removeMark() {
+      var hapusMark;
+      var countUlang=1;
+      for(i in markersArray){
+        if(markersArray[i].getPosition() == this.getPosition()){
+          hapusMark=i;
+        }else{
+          markersArray[i].setTitle(countUlang+"");
+          countUlang++;
+        }
+      }
+      markersArray[hapusMark].setMap(null);
+      markersArray.splice(hapusMark,1);
+      countMark--;
+//      alert(countMark);
+    }
+    </script>
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2EnG_QKTlVAVCEkfba_rlej5-rbC0sSI&sensor=false&libraries=geometry,places">
+    </script>
 @endsection
 
 @section('content')
@@ -273,26 +395,16 @@
                                   ]) !!}
                   </div>
                 </div>
+
                 <div class="form-group">
-                  <label class="col-md-4 control-label">Building Lat :</label>
-                  <div class="col-md-6">
-                  {!! Form::input('text','building_lat',null, [
-                                  'id'    => 'edit_building_lat',
-                                  'class' => 'form-control',
-                                  'placeholder' => 'Building Latitude'
-                                  ]) !!}
-                  </div>
+                    <label class="control-label col-sm-4" for="building_name">Point your location : </label>
+                    <div class="col-sm-6">
+                      <input type="hidden" name="building_lat" id="edit_building_lat" />
+                      <input type="hidden" name="building_lng" id="edit_building_lng" />
+                      <div id="map"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label class="col-md-4 control-label">Building Lng :</label>
-                  <div class="col-md-6">
-                  {!! Form::input('text','building_lng',null, [
-                                  'id'    => 'edit_building_lng',
-                                  'class' => 'form-control',
-                                  'placeholder' => 'Building Longitude'
-                                  ]) !!}
-                  </div>
-                </div>
+
               </div>
 
               {{--<div class="form-group">
@@ -308,7 +420,7 @@
 
               <div class="form-group">
                 <div class="col-md-6 col-md-offset-4">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="button" class="btn btn-primary" onclick="submitFormBuilding()">Submit</button>
                 </div>
               </div>
 

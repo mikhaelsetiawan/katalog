@@ -303,20 +303,23 @@
     }
 
     function addMarker(location) {
-      var x=location.lat();
-      var y=location.lng();
-      marker = new google.maps.Marker({
-        position: location,
-        map: map,
-        draggable:true,
-        animation: google.maps.Animation.DROP,
-        title:"Your building location",
-        //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
-      });
-      countMark++;
-      google.maps.event.addListener(marker, 'dblclick', removeMark);
-      markersArray.push(marker);
-      alert(countMark);
+      if(countMark == 0)
+      {
+        var x=location.lat();
+        var y=location.lng();
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable:true,
+          animation: google.maps.Animation.DROP,
+          title:"Your building location",
+          //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
+        });
+        countMark++;
+        google.maps.event.addListener(marker, 'dblclick', removeMark);
+        markersArray.push(marker);
+//        alert(countMark);
+      }
     }
 
     function removeMark() {
@@ -333,7 +336,7 @@
       markersArray[hapusMark].setMap(null);
       markersArray.splice(hapusMark,1);
       countMark--;
-      alert(countMark);
+//      alert(countMark);
     }
     </script>
 

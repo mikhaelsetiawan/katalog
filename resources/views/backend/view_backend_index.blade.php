@@ -42,8 +42,7 @@
       </nav>
       <main>
         @yield('content')
-        @yield('page-script')
-        @yield('testing')
+      @yield('page-script')
       </main>
       
       
