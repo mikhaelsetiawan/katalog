@@ -41,14 +41,17 @@
                                         'class' => 'form-control',
                                         'placeholder' => 'Address'
                                         ]) !!}
+                        <br/>
+                        <button type="button" class="btn btn-success btn-sm" onclick="codeAddress()">Point it at maps.</button>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="building_name">Point your location : </label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-10" style="padding-top:7px;">
                       <input type="hidden" name="building_lat" id="edit_building_lat" />
                       <input type="hidden" name="building_lng" id="edit_building_lng" />
+                      <span class="control-label" id="gmap_helper">Point your marker on map.</span>
                       <div id="map"></div>
                     </div>
                 </div>
@@ -178,8 +181,7 @@
 
 	<script type="text/javascript">
 		//var editor; // use a global for the submit and return data rendering in the examples
-        var $model_building = JSON.parse( '{!! (json_encode($model_building)) !!}' );
-
+    var $model_building = JSON.parse( '{!! (json_encode($model_building)) !!}' );
 		$(document).ready(function() {
 		    $("#table_building").dataTable(
 		        {
@@ -248,8 +250,10 @@
     var map;
     var markersArray = [];
     var countMark = 0;
+    var geocoder = '';
 
     function initMap(inlat, inlng) {
+      geocoder = new google.maps.Geocoder();
       markersArray = [];
       countMark = 0;
       var isFilled = false;
@@ -291,6 +295,7 @@
         });
 
         google.maps.event.addListener(marker, 'dblclick', removeMark);
+        google.maps.event.addListener(marker, 'dragend', dragMark);
 
         markersArray.push(marker);
         markersArray[countMark].setMap(map);
@@ -317,7 +322,11 @@
         });
         countMark++;
         google.maps.event.addListener(marker, 'dblclick', removeMark);
+        google.maps.event.addListener(marker, 'dragend', dragMark);
         markersArray.push(marker);
+        var lat =  markersArray[0].getPosition().lat();
+        var lng = markersArray[0].getPosition().lng();
+        codeCoord(lat,lng);
 //        alert(countMark);
       }
     }
@@ -335,8 +344,64 @@
       }
       markersArray[hapusMark].setMap(null);
       markersArray.splice(hapusMark,1);
+      $('#gmap_helper').html("Point your marker on map.");
       countMark--;
 //      alert(countMark);
+    }
+
+    function codeCoord(lat,lng)
+    {
+//      var latLng = new Array(lat,lng);
+      var latLng = new google.maps.LatLng(lat,lng);
+      //console.log(latLng);
+      geocoder.geocode( { 'location':latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        $('#gmap_helper').html(results[0].formatted_address);
+        console.log('done');
+      }
+      else{
+        $('#gmap_helper').html("Point your marker on map.");
+        console.log('fail');
+      }
+      });
+    }
+
+    function codeAddress(alamat)
+    {
+      var sAddress = '';
+      if(typeof alamat == 'undefined')
+      {
+        sAddress = $("#edit_building_address").val();
+      }else{
+        sAddress = alamat;
+      }
+      geocoder.geocode( { 'address': sAddress}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+//        if(tipe=='Point'){
+          if(countMark == 0)
+          {
+            addMarker(results[0].geometry.location);
+          }else{
+            markersArray[0].setPosition(results[0].geometry.location);
+          }
+//        }
+        //alert('done');
+        console.log('done');
+      }
+      else{
+        console.log('fail');
+        //jika tidak bisa lakukan sesuatu
+        //codeAddress('Jimerto, Surabaya, East Java, Indonesia');
+      }
+      });
+    }
+
+    function dragMark()
+    {
+      var lat =  markersArray[0].getPosition().lat();
+      var lng = markersArray[0].getPosition().lng();
+      codeCoord(lat,lng);
     }
     </script>
 
