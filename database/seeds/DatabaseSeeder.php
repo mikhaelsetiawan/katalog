@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 			$this->call(BusinessTableSeeder::class);
 			$this->call(MemberaffTableSeeder::class);
 			$this->call(NewsTableSeeder::class);
+			$this->call(EventTableSeeder::class);
 
     }
 }
@@ -250,6 +251,39 @@ class DatabaseSeeder extends Seeder
 						'news_title' => 'Peluncuran produk baru',
 						'news_content' => 'Kami telah meluncurkan sebuah produk baru. Hadirilah acara peluncuran produk baru kami',
 					]
+				)
+			);
+		}
+	}
+
+	class eventTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('event')->delete();
+			DB::table('event')->insert(array(
+					[
+						'member_id' => '1',
+						'business_id' => '1',
+						'event_title' => 'Seminar Meningkatkan Produksi Produk',
+						'event_content' => 'Kami mengadakan seminar meningkatkan produksi produk dengan cepat.',
+						'event_address' => 'Jalan ABC no 1-3',
+						'event_lat' => '-7.246582985239078',
+						'event_lng' => '112.73772828564461',
+						'event_start_date' => '2016-01-05 06:00:00',
+						'event_end_date' => '2016-01-05 18:00:00',
+					],
+					[
+						'member_id' => '2',
+						'business_id' => '2',
+						'event_title' => 'Bazaar Murah',
+						'event_content' => 'Kami mengadakan bazaar murah dalam rangka ulang tahun perusahaan kami.',
+						'event_address' => 'Jalan DEF no 4-7',
+						'event_lat' => '-7.2953848501891825',
+						'event_lng' => '112.730426795315',
+						'event_start_date' => '2016-01-12 06:00:00',
+						'event_end_date' => '2016-01-15 18:00:00',
+					],
 				)
 			);
 		}

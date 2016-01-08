@@ -21,6 +21,16 @@
 	font-size: 11px;
 }
 
+.div_news .item .datetime
+{
+}
+
+.div_news .item .latlng .map_img
+{
+	width: 300px;
+	height: 300px;
+}
+
 .div_news .item .date .button_edit
 {
 	color: #0259C4;
@@ -29,6 +39,53 @@
 }
 
 .div_news .item .date .button_delete
+{
+	color: #b11f1f;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.div_event
+{
+	margin-top: 50px;
+}
+
+.div_event .item
+{
+	margin-top: 5px;
+	border-bottom: 1px solid #cccccc;
+}
+
+.div_event .item .title
+{
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.div_event .item .date
+{
+	text-align: right;
+	font-size: 11px;
+}
+
+.div_event .item .datetime
+{
+}
+
+.div_event .item .location .map_img
+{
+	width: 600px;
+	height: 300px;
+}
+
+.div_event .item .date .button_edit
+{
+	color: #0259C4;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.div_event .item .date .button_delete
 {
 	color: #b11f1f;
 	margin-right: 10px;

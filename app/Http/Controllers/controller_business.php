@@ -8,6 +8,7 @@ use App\Models\model_ext_province;
 use App\Models\model_ext_city;
 use App\Models\model_member_affiliation;
 use App\Models\model_news;
+use App\Models\model_event;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
@@ -125,6 +126,35 @@ class controller_business extends Controller {
 			$model_news =  model_news::find($_POST['news_id']);
 			$model_news['news_status'] = 0;
 			if($model_news->save())
+			{
+				echo 1;
+			}
+		}
+	}
+
+	public function submitAddEvent()
+	{
+		if($_POST['_type'] == 1)
+		{//new
+			$model_event =  new model_event();
+			$model_event ->fill($_POST);
+			if($model_event ->save())
+			{
+				$data = array();
+				$data['event_id'] = $model_event->event_id;
+				$data['created_at'] = date_format(new DateTime($model_event->created_at), 'd-M-Y H:i:s');
+				echo json_encode($data);
+			}else{
+				echo 0;
+			}
+		}elseif($_POST['_type'] == 2)
+		{//edit
+
+		}elseif($_POST['_type'] == 3)
+		{//delete
+			$model_event =  model_event::find($_POST['event_id']);
+			$model_event['event_status'] = 0;
+			if($model_event->save())
 			{
 				echo 1;
 			}

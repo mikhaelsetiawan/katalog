@@ -48,6 +48,11 @@ class model_business extends Model{
 		return $this->hasMany('App\Models\model_news','business_id', 'business_id')->where(array('news_status'=>'1'))->orderBy('created_at',SORT_DESC);
 	}
 
+	public function event()
+	{
+		return $this->hasMany('App\Models\model_event','business_id', 'business_id')->where(array('event_status'=>'1'))->orderBy('created_at',SORT_DESC);
+	}
+
 	public function parentName()
 	{
 		$model_business = model_business::find($this->business_parent);

@@ -11,6 +11,7 @@ return array(
     'CreateModelBusiness' => $baseDir . '/database/migrations/2015_12_28_080310_create_model_business.php',
     'CreateModelBusinessClaim' => $baseDir . '/database/migrations/2016_01_01_105036_create_model_business_claim.php',
     'CreateModelBusinessField' => $baseDir . '/database/migrations/2015_12_28_080309_create_model_business_field.php',
+    'CreateModelEvent' => $baseDir . '/database/migrations/2016_01_08_015758_create_model_event.php',
     'CreateModelExtCity' => $baseDir . '/database/migrations/2015_12_28_000004_create_model_ext_city.php',
     'CreateModelExtCountry' => $baseDir . '/database/migrations/2015_12_28_000002_create_model_ext_country.php',
     'CreateModelExtProvince' => $baseDir . '/database/migrations/2015_12_28_000003_create_model_ext_province.php',
@@ -533,5 +534,6 @@ return array(
     'countryTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'memberTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'memberaffTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
+    'newsTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'provinceTableSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
 );
