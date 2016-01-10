@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 			$this->call(MemberaffTableSeeder::class);
 			$this->call(NewsTableSeeder::class);
 			$this->call(EventTableSeeder::class);
+			$this->call(PhotosCategoryTableSeeder::class);
 
     }
 }
@@ -284,6 +285,29 @@ class DatabaseSeeder extends Seeder
 						'event_start_date' => '2016-01-12 06:00:00',
 						'event_end_date' => '2016-01-15 18:00:00',
 					],
+				)
+			);
+		}
+	}
+
+	class photosCategoryTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('photos_category')->delete();
+			DB::table('photos_category')->insert(array(
+					[
+						'business_id' => '1',
+						'pcat_name' => 'photo'
+					],
+					[
+						'business_id' => '2',
+						'pcat_name' => 'photo'
+					],
+					[
+						'business_id' => '3',
+						'pcat_name' => 'photo'
+					]
 				)
 			);
 		}

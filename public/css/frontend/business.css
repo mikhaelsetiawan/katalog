@@ -91,3 +91,21 @@
 	margin-right: 10px;
 	cursor: pointer;
 }
+
+.album
+{
+	width: 1020px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.album .item
+{
+	width: 250px;
+	height: 250px;
+	background-position:center center;
+	background-size: cover;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	float: left;
+}

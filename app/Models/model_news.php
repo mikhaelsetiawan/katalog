@@ -20,6 +20,11 @@ class model_news extends Model{
 
 	}
 
+	public function photos()
+	{
+		return $this->hasMany('App\Models\model_photos_news','news_id', 'news_id')->where(array('pnews_status'=>'1'))->orderBy('created_at',SORT_DESC);
+	}
+
 	public function business()
 	{
 		return $this->belongsTo('App\Models\model_business','business_id', 'business_id');
