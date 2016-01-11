@@ -41,34 +41,24 @@
                                         'class' => 'form-control',
                                         'placeholder' => 'Address'
                                         ]) !!}
+                        <br/>
+                        <button type="button" class="btn btn-success btn-sm" onclick="codeAddress()">Point it at maps.</button>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="building_name">Lat : </label>
-                    <div class="col-sm-10">
-                        {!! Form::input('text','building_lat',null, [
-                                        'id'    => 'edit_building_lat',
-                                        'class' => 'form-control',
-                                        'placeholder' => 'Latitude'
-                                        ]) !!}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="building_name">Lng : </label>
-                    <div class="col-sm-10">
-                        {!! Form::input('text','building_lng',null, [
-                                        'id'    => 'edit_building_lng',
-                                        'class' => 'form-control',
-                                        'placeholder' => 'Longitude'
-                                        ]) !!}
+                    <label class="control-label col-sm-2" for="building_name">Point your location : </label>
+                    <div class="col-sm-10" style="padding-top:7px;">
+                      <input type="hidden" name="building_lat" id="edit_building_lat" />
+                      <input type="hidden" name="building_lng" id="edit_building_lng" />
+                      <span class="control-label" id="gmap_helper">Point your marker on map.</span>
+                      <div id="map"></div>
                     </div>
                 </div>
 
                 <div class="popup-buttons">
                     <div class="btn-group fr" onclick="$('#form-popup-edit').submit()">
-                        <button type="submit" class="btn btn-success btn-sm">
+                        <button type="button" class="btn btn-success btn-sm" onclick="submitFormBuilding()">
                             <span class="glyphicon glyphicon-ok"></span>
                             <span class="hidden-sm" style="margin-left: 6px;">Submit</span>
                         </button>
@@ -186,12 +176,12 @@
         {
             display: inline-block;
         }
+        #map { height: 300px;width: 300px; }
 	</style>
 
 	<script type="text/javascript">
 		//var editor; // use a global for the submit and return data rendering in the examples
-        var $model_building = JSON.parse( '{!! (json_encode($model_building)) !!}' );
-
+    var $model_building = JSON.parse( '{!! (json_encode($model_building)) !!}' );
 		$(document).ready(function() {
 		    $("#table_building").dataTable(
 		        {
@@ -215,6 +205,7 @@
 		    $("#edit_building_lat").val(lat);
 		    $("#edit_building_lng").val(lng);
 		    openPopup("popup-edit");
+        initMap(lat,lng);
 		}
 
 		function popupSave()
@@ -229,6 +220,7 @@
 		    $("#edit_building_lat").val("");
 		    $("#edit_building_lng").val("");
 		    openPopup("popup-edit");
+        initMap();
 		}
 
 		function popupDelete(key)
@@ -237,5 +229,183 @@
 		    $("#delete_key").val(key);
 		    openPopup("popup-delete");
 		}
+
+		function submitFormBuilding()
+		{
+		  if(countMark > 0)
+		  {
+        var lat =  markersArray[0].getPosition().lat();
+        var lng = markersArray[0].getPosition().lng();
+        $("#edit_building_lat").val(lat);
+        $("#edit_building_lng").val(lng);
+      }else{
+        $("#edit_building_lat").val("");
+        $("#edit_building_lng").val("");
+      }
+      $("#form-popup-edit").submit();
+		}
 	</script>
+
+    <script type="text/javascript">
+    var map;
+    var markersArray = [];
+    var countMark = 0;
+    var geocoder = '';
+
+    function initMap(inlat, inlng) {
+      geocoder = new google.maps.Geocoder();
+      markersArray = [];
+      countMark = 0;
+      var isFilled = false;
+      var lat = -7.257822;
+      var lng = 112.746998;
+
+      if(typeof inlat !== 'undefined' && inlat != '')
+      {
+      isFilled = true;
+        lat = inlat;
+      }
+
+      if(typeof inlng !== 'undefined' && inlat != '')
+      {
+      isFilled = true;
+        lng = inlng;
+      }
+
+      var mapOptions = {
+        zoom: 12,
+        center: new google.maps.LatLng(lat,lng),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      map = new google.maps.Map(document.getElementById('map'),mapOptions);
+
+      /*google.maps.event.addListener(map, 'click', function(event) {
+        addMarker(event.latLng);
+      });*/
+
+      if(isFilled == true)
+      {
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat,lng),
+          draggable:true,
+          animation: google.maps.Animation.DROP,
+  //        title:countMark+"",
+          title:"Your building location",
+          //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
+        });
+
+        google.maps.event.addListener(marker, 'dblclick', removeMark);
+        google.maps.event.addListener(marker, 'dragend', dragMark);
+
+        markersArray.push(marker);
+        markersArray[countMark].setMap(map);
+        countMark++;
+      }else{
+        google.maps.event.addListener(map, 'click', function(event) {
+          addMarker(event.latLng);
+        });
+      }
+    }
+
+    function addMarker(location) {
+      if(countMark == 0)
+      {
+        var x=location.lat();
+        var y=location.lng();
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable:true,
+          animation: google.maps.Animation.DROP,
+          title:"Your building location",
+          //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
+        });
+        countMark++;
+        google.maps.event.addListener(marker, 'dblclick', removeMark);
+        google.maps.event.addListener(marker, 'dragend', dragMark);
+        markersArray.push(marker);
+        var lat =  markersArray[0].getPosition().lat();
+        var lng = markersArray[0].getPosition().lng();
+        codeCoord(lat,lng);
+//        alert(countMark);
+      }
+    }
+
+    function removeMark() {
+      var hapusMark;
+      var countUlang=1;
+      for(i in markersArray){
+        if(markersArray[i].getPosition() == this.getPosition()){
+          hapusMark=i;
+        }else{
+          markersArray[i].setTitle(countUlang+"");
+          countUlang++;
+        }
+      }
+      markersArray[hapusMark].setMap(null);
+      markersArray.splice(hapusMark,1);
+      $('#gmap_helper').html("Point your marker on map.");
+      countMark--;
+//      alert(countMark);
+    }
+
+    function codeCoord(lat,lng)
+    {
+//      var latLng = new Array(lat,lng);
+      var latLng = new google.maps.LatLng(lat,lng);
+      //console.log(latLng);
+      geocoder.geocode( { 'location':latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        $('#gmap_helper').html(results[0].formatted_address);
+        console.log('done');
+      }
+      else{
+        $('#gmap_helper').html("Point your marker on map.");
+        console.log('fail');
+      }
+      });
+    }
+
+    function codeAddress(alamat)
+    {
+      var sAddress = '';
+      if(typeof alamat == 'undefined')
+      {
+        sAddress = $("#edit_building_address").val();
+      }else{
+        sAddress = alamat;
+      }
+      geocoder.geocode( { 'address': sAddress}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+//        if(tipe=='Point'){
+          if(countMark == 0)
+          {
+            addMarker(results[0].geometry.location);
+          }else{
+            markersArray[0].setPosition(results[0].geometry.location);
+          }
+//        }
+        //alert('done');
+        console.log('done');
+      }
+      else{
+        console.log('fail');
+        //jika tidak bisa lakukan sesuatu
+        //codeAddress('Jimerto, Surabaya, East Java, Indonesia');
+      }
+      });
+    }
+
+    function dragMark()
+    {
+      var lat =  markersArray[0].getPosition().lat();
+      var lng = markersArray[0].getPosition().lng();
+      codeCoord(lat,lng);
+    }
+    </script>
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2EnG_QKTlVAVCEkfba_rlej5-rbC0sSI&sensor=false&libraries=geometry,places">
+    </script>
 @endsection

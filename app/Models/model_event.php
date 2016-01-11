@@ -2,14 +2,19 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class model_news extends Model{
-	protected $table = 'news';
-	protected $primaryKey = 'news_id';
+class model_event extends Model{
+	protected $table = 'event';
+	protected $primaryKey = 'event_id';
 	protected $fillable = [
 		'business_id',
 		'member_id',
-		'news_title',
-		'news_content',
+		'event_title',
+		'event_content',
+		'event_address',
+		'event_lat',
+		'event_lng',
+		'event_start_date',
+		'event_end_date',
 	];
 
 	public function init() {
@@ -22,8 +27,9 @@ class model_news extends Model{
 
 	public function photos()
 	{
-		return $this->hasMany('App\Models\model_photos_news','news_id', 'news_id')->where(array('pnews_status'=>'1'))->orderBy('created_at',SORT_DESC);
+		return $this->hasMany('App\Models\model_photos_event','event_id', 'event_id')->where(array('pevent_status'=>'1'))->orderBy('created_at',SORT_DESC);
 	}
+
 
 	public function business()
 	{

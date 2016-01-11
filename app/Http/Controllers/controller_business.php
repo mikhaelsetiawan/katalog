@@ -8,6 +8,11 @@ use App\Models\model_ext_province;
 use App\Models\model_ext_city;
 use App\Models\model_member_affiliation;
 use App\Models\model_news;
+use App\Models\model_event;
+use App\Models\model_photos_business;
+use App\Models\model_photos_category;
+use App\Models\model_photos_news;
+use App\Models\model_photos_event;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
@@ -38,13 +43,74 @@ class controller_business extends Controller {
 		$model_business = model_business::find($business_id);
 		$model_claim = model_business_claim::where(['business_id'=>$business_id,'member_id'=>$member_id,'bclaim_status'=>'1'])->get();
 		$model_maff = model_member_affiliation::where(['business_id'=>$business_id,'member_id'=>$member_id,'maff_status'=>'1'])->get();
+		$model_pcat = model_photos_category::where(['business_id'=>$business_id,'pcat_status'=>1])->pluck('pcat_name','pcat_id')->toArray();
+		$model_pbusiness = model_photos_business::where(['business_id'=>$business_id,'pbusiness_status'=>1])->get();
 
 		return view('frontend.business.view_detail')->with([
 			'member_id' => $member_id,
 			'business' => $model_business,
 			'alreadyClaim' => count($model_claim),
-			'isOwner' => count($model_maff)
+			'isOwner' => count($model_maff),
+			'pcat' => $model_pcat,
+			'pbusiness' => $model_pbusiness,
 		]);
+	}
+
+	public function addPcat()
+	{
+		$model_pcat = new model_photos_category();
+		$model_pcat->fill($_POST);
+		$model_pcat->save();
+		echo ($model_pcat->pcat_id);
+	}
+
+
+	public function addPBusiness()
+	{
+		/*$data = array();
+		$data['category'] = $_POST['pcat_id'];*/
+		$member_id = auth()->guard('member')->user()->member_id;
+		for($i=1;$i<=$_POST['count_images_pbusiness'];$i++) {
+			if(isset($_POST['pbusiness'.$i.'_image']) && $_POST['pbusiness'.$i.'_image'] != ""){
+				$img = $_POST['pbusiness'.$i.'_image'];
+				$img = str_replace('data:image/jpeg;base64,', '', $img);
+				$img = str_replace(' ', '+', $img);
+				$data = base64_decode($img);
+
+				/*$med = $_POST['pbusiness'.$i.'_imageMed'];
+				$med = str_replace('data:image/jpeg;base64,', '', $med);
+				$med = str_replace(' ', '+', $med);
+				$dataMed = base64_decode($med);
+
+				$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
+				$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
+				$thumb = str_replace(' ', '+', $thumb);
+				$dataThumb = base64_decode($thumb);*/
+
+				$model_pbusiness = new model_photos_business();
+				$model_pbusiness['pcat_id']=$_POST['pcat_id'];
+				$model_pbusiness['business_id']=$_POST['business_id'];
+				$model_pbusiness['pbusiness_uploader']=$member_id;
+				$model_pbusiness['pbusiness_caption']=$_POST['pbusiness'.$i.'_caption'];
+
+				if ($model_pbusiness->save()) {
+					$file = base_path().'/public/img/pbusiness/images/'.$model_pbusiness->pbusiness_id.'.jpg';
+					$success = file_put_contents($file, $data);
+
+					//$data['photos'][] = $model_pbusiness->business_id;
+
+					/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
+					$successMed = file_put_contents($fileMed, $dataMed);
+
+					$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
+					$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+				}
+			}
+		}
+//		echo json_encode($data);
+
+		return back();
+
 	}
 
 	public function submitClaimBusiness()
@@ -104,15 +170,55 @@ class controller_business extends Controller {
 
 	public function submitAddNews()
 	{
+		$member_id = auth()->guard('member')->user()->member_id;
 		if($_POST['_type'] == 1)
 		{//new
 			$model_news =  new model_news();
 			$model_news ->fill($_POST);
 			if($model_news ->save())
 			{
+				$_POST['photos'] = json_decode($_POST['photos'],true);
+				$dataImg = array();
+				for($i=1;$i<=count($_POST['photos']);$i++) {
+					if(isset($_POST['photos']['pnews'.$i.'_image']) && $_POST['photos']['pnews'.$i.'_image'] != ""){
+						$img = $_POST['photos']['pnews'.$i.'_image'];
+						$dataImg[$i] = $img;
+						$img = str_replace('data:image/jpeg;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+
+						/*$med = $_POST['pbusiness'.$i.'_imageMed'];
+						$med = str_replace('data:image/jpeg;base64,', '', $med);
+						$med = str_replace(' ', '+', $med);
+						$dataMed = base64_decode($med);
+
+						$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
+						$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
+						$thumb = str_replace(' ', '+', $thumb);
+						$dataThumb = base64_decode($thumb);*/
+
+						$model_pnews = new model_photos_news();
+						$model_pnews['news_id']=$model_news->news_id;
+						$model_pnews['pnews_uploader']=$member_id;
+						$model_pnews['pnews_caption']=$_POST['photos']['pnews'.$i.'_caption'];
+
+						if ($model_pnews->save()) {
+							$file = base_path().'/public/img/pnews/images/'.$model_pnews->pnews_id.'.jpg';
+							$success = file_put_contents($file, $data);
+
+							/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
+							$successMed = file_put_contents($fileMed, $dataMed);
+
+							$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
+							$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+						}
+					}
+				}
+
 				$data = array();
 				$data['news_id'] = $model_news->news_id;
 				$data['created_at'] = date_format(new DateTime($model_news->created_at), 'd-M-Y H:i:s');
+				$data['photos'] = $dataImg;
 				echo json_encode($data);
 			}else{
 				echo 0;
@@ -125,6 +231,74 @@ class controller_business extends Controller {
 			$model_news =  model_news::find($_POST['news_id']);
 			$model_news['news_status'] = 0;
 			if($model_news->save())
+			{
+				echo 1;
+			}
+		}
+	}
+
+	public function submitAddEvent()
+	{
+		$member_id = auth()->guard('member')->user()->member_id;
+		if($_POST['_type'] == 1)
+		{//new
+			$model_event =  new model_event();
+			$model_event ->fill($_POST);
+			if($model_event ->save())
+			{
+				$_POST['photos'] = json_decode($_POST['photos'],true);
+				$dataImg = array();
+				for($i=1;$i<=count($_POST['photos']);$i++) {
+					if(isset($_POST['photos']['pevent'.$i.'_image']) && $_POST['photos']['pevent'.$i.'_image'] != ""){
+						$img = $_POST['photos']['pevent'.$i.'_image'];
+						$dataImg[$i] = $img;
+						$img = str_replace('data:image/jpeg;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+
+						/*$med = $_POST['pbusiness'.$i.'_imageMed'];
+						$med = str_replace('data:image/jpeg;base64,', '', $med);
+						$med = str_replace(' ', '+', $med);
+						$dataMed = base64_decode($med);
+
+						$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
+						$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
+						$thumb = str_replace(' ', '+', $thumb);
+						$dataThumb = base64_decode($thumb);*/
+
+						$model_pevent = new model_photos_event();
+						$model_pevent['event_id']=$model_event->event_id;
+						$model_pevent['pevent_uploader']=$member_id;
+						$model_pevent['pevent_caption']=$_POST['photos']['pevent'.$i.'_caption'];
+
+						if ($model_pevent->save()) {
+							$file = base_path().'/public/img/pevent/images/'.$model_pevent->pevent_id.'.jpg';
+							$success = file_put_contents($file, $data);
+
+							/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
+							$successMed = file_put_contents($fileMed, $dataMed);
+
+							$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
+							$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+						}
+					}
+				}
+				$data = array();
+				$data['event_id'] = $model_event->event_id;
+				$data['created_at'] = date_format(new DateTime($model_event->created_at), 'd-M-Y H:i:s');
+				$data['photos'] = $dataImg;
+				echo json_encode($data);
+			}else{
+				echo 0;
+			}
+		}elseif($_POST['_type'] == 2)
+		{//edit
+
+		}elseif($_POST['_type'] == 3)
+		{//delete
+			$model_event =  model_event::find($_POST['event_id']);
+			$model_event['event_status'] = 0;
+			if($model_event->save())
 			{
 				echo 1;
 			}
@@ -165,5 +339,16 @@ class controller_business extends Controller {
 		$province_id = $_POST['province_id'];
 		$model_province = model_ext_province::find($province_id);
 		echo json_encode($model_province->city);
+	}
+
+	public function getPBusiness()
+	{
+		if($_POST['pcat_id'] == 0)
+		{
+			$model_pbusiness = model_photos_business::where(['business_id'=>$_POST['business_id'],'pbusiness_status'=>1])->get();
+		}else{
+			$model_pbusiness = model_photos_business::where(['business_id'=>$_POST['business_id'],'pcat_id'=>$_POST['pcat_id'],'pbusiness_status'=>1])->get();
+		}
+		echo json_encode($model_pbusiness);
 	}
 }
