@@ -47,7 +47,8 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('successClaim','controller_business@successClaimBusiness');
 		});
 
-		Route::group(['prefix' => 'backend'], function () {
+		Route::group(['prefix' => '/backend'], function () {
+        Route::get('/','controller_backend@index');
         Route::get('','controller_backend@index');
 				
         Route::get('member','backend\controller_member@index');

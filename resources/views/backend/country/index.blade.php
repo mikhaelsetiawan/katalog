@@ -1,4 +1,4 @@
-@extends('backend.view_backend_index')
+@extends('layout.layout_backend')
 
 @section('popup')
 <div class="popup-overlay">
