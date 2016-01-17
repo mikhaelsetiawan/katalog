@@ -13,6 +13,8 @@ use App\Models\model_photos_business;
 use App\Models\model_photos_category;
 use App\Models\model_photos_news;
 use App\Models\model_photos_event;
+use App\Models\model_bticket;
+use App\Models\model_ticket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
@@ -45,6 +47,12 @@ class controller_business extends Controller {
 		$model_maff = model_member_affiliation::where(['business_id'=>$business_id,'member_id'=>$member_id,'maff_status'=>'1'])->get();
 		$model_pcat = model_photos_category::where(['business_id'=>$business_id,'pcat_status'=>1])->pluck('pcat_name','pcat_id')->toArray();
 		$model_pbusiness = model_photos_business::where(['business_id'=>$business_id,'pbusiness_status'=>1])->get();
+		$sisaticket = [];
+		$model_bticket = model_bticket::where(['business_id'=>$business_id])->get();
+		foreach($model_bticket as $bticket)
+		{
+			$sisaticket[$bticket->ticket_id] = $bticket->bticket_amount;
+		}
 
 		return view('frontend.business.view_detail')->with([
 			'member_id' => $member_id,
@@ -53,6 +61,7 @@ class controller_business extends Controller {
 			'isOwner' => count($model_maff),
 			'pcat' => $model_pcat,
 			'pbusiness' => $model_pbusiness,
+			'sisaticket' => $sisaticket,
 		]);
 	}
 
@@ -173,55 +182,64 @@ class controller_business extends Controller {
 		$member_id = auth()->guard('member')->user()->member_id;
 		if($_POST['_type'] == 1)
 		{//new
-			$model_news =  new model_news();
-			$model_news ->fill($_POST);
-			if($model_news ->save())
+
+			$model_bticket = model_bticket::where(['ticket_id'=>1,'business_id'=>$_POST['business_id']])->first();
+			if($model_bticket->bticket_amount > 0)
 			{
-				$_POST['photos'] = json_decode($_POST['photos'],true);
-				$dataImg = array();
-				for($i=1;$i<=count($_POST['photos']);$i++) {
-					if(isset($_POST['photos']['pnews'.$i.'_image']) && $_POST['photos']['pnews'.$i.'_image'] != ""){
-						$img = $_POST['photos']['pnews'.$i.'_image'];
-						$dataImg[$i] = $img;
-						$img = str_replace('data:image/jpeg;base64,', '', $img);
-						$img = str_replace(' ', '+', $img);
-						$data = base64_decode($img);
+				$model_news =  new model_news();
+				$model_news ->fill($_POST);
+				if($model_news ->save()) {
+					$model_bticket->bticket_amount -= 1;
+					$model_bticket->save();
 
-						/*$med = $_POST['pbusiness'.$i.'_imageMed'];
-						$med = str_replace('data:image/jpeg;base64,', '', $med);
-						$med = str_replace(' ', '+', $med);
-						$dataMed = base64_decode($med);
+					$_POST['photos'] = json_decode($_POST['photos'], TRUE);
+					$dataImg = array();
+					for ($i = 1; $i <= count($_POST['photos']); $i++) {
+						if (isset($_POST['photos']['pnews' . $i . '_image']) && $_POST['photos']['pnews' . $i . '_image'] != "") {
+							$img = $_POST['photos']['pnews' . $i . '_image'];
+							$dataImg[$i] = $img;
+							$img = str_replace('data:image/jpeg;base64,', '', $img);
+							$img = str_replace(' ', '+', $img);
+							$data = base64_decode($img);
 
-						$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
-						$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
-						$thumb = str_replace(' ', '+', $thumb);
-						$dataThumb = base64_decode($thumb);*/
+							/*$med = $_POST['pbusiness'.$i.'_imageMed'];
+							$med = str_replace('data:image/jpeg;base64,', '', $med);
+							$med = str_replace(' ', '+', $med);
+							$dataMed = base64_decode($med);
 
-						$model_pnews = new model_photos_news();
-						$model_pnews['news_id']=$model_news->news_id;
-						$model_pnews['pnews_uploader']=$member_id;
-						$model_pnews['pnews_caption']=$_POST['photos']['pnews'.$i.'_caption'];
+							$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
+							$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
+							$thumb = str_replace(' ', '+', $thumb);
+							$dataThumb = base64_decode($thumb);*/
 
-						if ($model_pnews->save()) {
-							$file = base_path().'/public/img/pnews/images/'.$model_pnews->pnews_id.'.jpg';
-							$success = file_put_contents($file, $data);
+							$model_pnews = new model_photos_news();
+							$model_pnews['news_id'] = $model_news->news_id;
+							$model_pnews['pnews_uploader'] = $member_id;
+							$model_pnews['pnews_caption'] = $_POST['photos']['pnews' . $i . '_caption'];
 
-							/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
-							$successMed = file_put_contents($fileMed, $dataMed);
+							if ($model_pnews->save()) {
+								$file = base_path() . '/public/img/pnews/images/' . $model_pnews->pnews_id . '.jpg';
+								$success = file_put_contents($file, $data);
 
-							$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
-							$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+								/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
+								$successMed = file_put_contents($fileMed, $dataMed);
+
+								$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
+								$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+							}
 						}
 					}
-				}
 
-				$data = array();
-				$data['news_id'] = $model_news->news_id;
-				$data['created_at'] = date_format(new DateTime($model_news->created_at), 'd-M-Y H:i:s');
-				$data['photos'] = $dataImg;
-				echo json_encode($data);
+					$data = array();
+					$data['news_id'] = $model_news->news_id;
+					$data['created_at'] = date_format(new DateTime($model_news->created_at), 'd-M-Y H:i:s');
+					$data['photos'] = $dataImg;
+					echo json_encode($data);
+				}else{
+					echo 0;
+				}
 			}else{
-				echo 0;
+				echo 1;
 			}
 		}elseif($_POST['_type'] == 2)
 		{//edit
@@ -242,54 +260,60 @@ class controller_business extends Controller {
 		$member_id = auth()->guard('member')->user()->member_id;
 		if($_POST['_type'] == 1)
 		{//new
-			$model_event =  new model_event();
-			$model_event ->fill($_POST);
-			if($model_event ->save())
-			{
-				$_POST['photos'] = json_decode($_POST['photos'],true);
-				$dataImg = array();
-				for($i=1;$i<=count($_POST['photos']);$i++) {
-					if(isset($_POST['photos']['pevent'.$i.'_image']) && $_POST['photos']['pevent'.$i.'_image'] != ""){
-						$img = $_POST['photos']['pevent'.$i.'_image'];
-						$dataImg[$i] = $img;
-						$img = str_replace('data:image/jpeg;base64,', '', $img);
-						$img = str_replace(' ', '+', $img);
-						$data = base64_decode($img);
+			$model_bticket = model_bticket::where(['ticket_id'=>2,'business_id'=>$_POST['business_id']])->first();
+			if($model_bticket->bticket_amount > 0) {
+				$model_event = new model_event();
+				$model_event->fill($_POST);
+				if ($model_event->save()) {
+					$model_bticket->bticket_amount -= 1;
+					$model_bticket->save();
+					$_POST['photos'] = json_decode($_POST['photos'], TRUE);
+					$dataImg = array();
+					for ($i = 1; $i <= count($_POST['photos']); $i++) {
+						if (isset($_POST['photos']['pevent' . $i . '_image']) && $_POST['photos']['pevent' . $i . '_image'] != "") {
+							$img = $_POST['photos']['pevent' . $i . '_image'];
+							$dataImg[$i] = $img;
+							$img = str_replace('data:image/jpeg;base64,', '', $img);
+							$img = str_replace(' ', '+', $img);
+							$data = base64_decode($img);
 
-						/*$med = $_POST['pbusiness'.$i.'_imageMed'];
-						$med = str_replace('data:image/jpeg;base64,', '', $med);
-						$med = str_replace(' ', '+', $med);
-						$dataMed = base64_decode($med);
+							/*$med = $_POST['pbusiness'.$i.'_imageMed'];
+							$med = str_replace('data:image/jpeg;base64,', '', $med);
+							$med = str_replace(' ', '+', $med);
+							$dataMed = base64_decode($med);
 
-						$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
-						$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
-						$thumb = str_replace(' ', '+', $thumb);
-						$dataThumb = base64_decode($thumb);*/
+							$thumb = $_POST['pbusiness'.$i.'_imageThumb'];
+							$thumb = str_replace('data:image/jpeg;base64,', '', $thumb);
+							$thumb = str_replace(' ', '+', $thumb);
+							$dataThumb = base64_decode($thumb);*/
 
-						$model_pevent = new model_photos_event();
-						$model_pevent['event_id']=$model_event->event_id;
-						$model_pevent['pevent_uploader']=$member_id;
-						$model_pevent['pevent_caption']=$_POST['photos']['pevent'.$i.'_caption'];
+							$model_pevent = new model_photos_event();
+							$model_pevent['event_id'] = $model_event->event_id;
+							$model_pevent['pevent_uploader'] = $member_id;
+							$model_pevent['pevent_caption'] = $_POST['photos']['pevent' . $i . '_caption'];
 
-						if ($model_pevent->save()) {
-							$file = base_path().'/public/img/pevent/images/'.$model_pevent->pevent_id.'.jpg';
-							$success = file_put_contents($file, $data);
+							if ($model_pevent->save()) {
+								$file = base_path() . '/public/img/pevent/images/' . $model_pevent->pevent_id . '.jpg';
+								$success = file_put_contents($file, $data);
 
-							/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
-							$successMed = file_put_contents($fileMed, $dataMed);
+								/*$fileMed = Yii::$app->basePath.'/images/products/medium/'.$imageModel->id;
+								$successMed = file_put_contents($fileMed, $dataMed);
 
-							$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
-							$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+								$fileThumb = Yii::$app->basePath.'/images/products/thumbnail/'.$imageModel->id;
+								$successThumb = file_put_contents($fileThumb, $dataThumb);*/
+							}
 						}
 					}
+					$data = array();
+					$data['event_id'] = $model_event->event_id;
+					$data['created_at'] = date_format(new DateTime($model_event->created_at), 'd-M-Y H:i:s');
+					$data['photos'] = $dataImg;
+					echo json_encode($data);
+				} else {
+					echo 0;
 				}
-				$data = array();
-				$data['event_id'] = $model_event->event_id;
-				$data['created_at'] = date_format(new DateTime($model_event->created_at), 'd-M-Y H:i:s');
-				$data['photos'] = $dataImg;
-				echo json_encode($data);
 			}else{
-				echo 0;
+				echo 1;
 			}
 		}elseif($_POST['_type'] == 2)
 		{//edit

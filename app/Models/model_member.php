@@ -40,6 +40,32 @@ class model_member extends Model implements AuthenticatableContract, CanResetPas
 		return Str::lower(Str::quickRandom(12));
 	}
 
+	public function ownedBusiness($mode=0,$member_id="")
+	{
+		if($member_id == "")
+		{
+			$member_id = $this->member_id;
+		}
+		$model_maff = model_member_affiliation::find(['member_id'=>$member_id,'maff_status'=>'1']);
+		$model_business = [];
+		if($mode == 0)
+		{
+			foreach($model_maff as $maff)
+			{
+				$model_business[] = $maff->business;
+			}
+		}elseif($mode == 1)
+		{
+			$data = [];
+			foreach($model_maff as $maff)
+			{
+				$data[$maff->business->business_id] = $maff->business->business_name;
+			}
+			$model_business = $data;
+		}
+		return $model_business;
+	}
+
 	public function emailGenPass($data)
 	{
 		$email = $data['member_email'];

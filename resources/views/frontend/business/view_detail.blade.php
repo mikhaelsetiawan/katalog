@@ -137,6 +137,8 @@
 	  {!! Html::script('js/massimgcompress.js'); !!}
 
   <script>
+    var sisaTicketNews = parseInt('{{ $sisaticket[1] }}');
+    var sisaTicketEvent = parseInt('{{ $sisaticket[2] }}');
     $(document).ready(function()
     {
 
@@ -200,6 +202,13 @@
           news_content:$('#edit_news_content').val(),
           photos:JSON.stringify(photos)
         },function(data) {
+          if(data == 0)
+          {
+            alert("Post news failed.");
+          }else if(data == 1)
+          {
+            alert("Tiket untuk melakukan post news telah habis.");
+          }else{
             data = $.parseJSON(data);
 
             var photos = '';
@@ -227,6 +236,9 @@
             $('#edit_news_content').val("");
             $('#upload_pnews_result').html("");
             $("#upload_pnews").replaceWith($("#upload_pnews").clone(true));
+            sisaTicketNews--;
+            $("#sisaTicket-news").html(sisaTicketNews);
+          }
         });
       });
       
@@ -269,50 +281,60 @@
                   photos:JSON.stringify(photos)
                 },function(data)
         {
-          data = $.parseJSON(data);
-          
-          var photos = '';
-          if(Object.keys(data.photos).length > 0)
+          if(data == 0)
           {
-            photos += '<div class="album">';
-            $.each( data.photos, function( index, value ){
-              photos += '<div class="item" style="background-image:url(\''+value+'\');"></div>';
-            });
-            photos += '</div>';
-          }
-          photos += '<div class="cb"></div>';
-                        
-          var latlng = $('#edit_event_lat').val()+','+$('#edit_event_lng').val();
-          var mapItem = '';
-          if($('#edit_event_lat').val() != '' && $('#edit_event_lng').val() != '')
+            alert("Post news failed.");
+          }else if(data == 1)
           {
-            mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='+latlng+'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'+latlng+'" />';
+            alert("Tiket untuk melakukan post event telah habis.");
+          }else{
+            data = $.parseJSON(data);
+
+            var photos = '';
+            if(Object.keys(data.photos).length > 0)
+            {
+              photos += '<div class="album">';
+              $.each( data.photos, function( index, value ){
+                photos += '<div class="item" style="background-image:url(\''+value+'\');"></div>';
+              });
+              photos += '</div>';
+            }
+            photos += '<div class="cb"></div>';
+
+            var latlng = $('#edit_event_lat').val()+','+$('#edit_event_lng').val();
+            var mapItem = '';
+            if($('#edit_event_lat').val() != '' && $('#edit_event_lng').val() != '')
+            {
+              mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='+latlng+'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'+latlng+'" />';
+            }
+            var item = '<div class="item" id="event_'+data.event_id+'">' +
+                          '<p class="title">'+$('#edit_event_title').val()+'</p>' +
+                          '<p class="content">'+$('#edit_event_content').val()+'</p>' +
+                            photos +
+                          '<p class="address">Address : '+$('#edit_event_address').val()+'</p>' +
+                          '<p class="datetime">Date : '+$('#edit_event_start_date').val()+' until '+$('#edit_event_end_date').val()+'</p>' +
+                          '<p class="location">'+mapItem+'</p>' +
+                          '<p class="date">' +
+                            '<span class="button_edit">Edit</span>' +
+                            '<span class="button_delete">Delete</span>' +
+                            data.created_at+
+                          '</p>' +
+                        '</div>';
+            $('.div_event').prepend(item);
+            $('#edit_event_title').val("");
+            $('#edit_event_content').val("");
+            $('#edit_event_address').val("");
+            $('#edit_event_lat').val("");
+            $('#edit_event_lng').val("");
+            $('#edit_event_start_date').val("");
+            $('#edit_event_end_date').val("");
+            $('#upload_pevent_result').html("");
+            $("#upload_pevent").replaceWith($("#upload_pevent").clone(true));
+            clearMap();
+            $('#gmap_helper').html("Point your marker on map.");
+            sisaTicketEvent--;
+            $("#sisaTicket-event").html(sisaTicketEvent);
           }
-          var item = '<div class="item" id="event_'+data.event_id+'">' +
-                        '<p class="title">'+$('#edit_event_title').val()+'</p>' +
-                        '<p class="content">'+$('#edit_event_content').val()+'</p>' +
-                          photos +
-                        '<p class="address">Address : '+$('#edit_event_address').val()+'</p>' +
-                        '<p class="datetime">Date : '+$('#edit_event_start_date').val()+' until '+$('#edit_event_end_date').val()+'</p>' +
-                        '<p class="location">'+mapItem+'</p>' +
-                        '<p class="date">' +
-                          '<span class="button_edit">Edit</span>' +
-                          '<span class="button_delete">Delete</span>' +
-                          data.created_at+
-                        '</p>' +
-                      '</div>';
-          $('.div_event').prepend(item);
-          $('#edit_event_title').val("");
-          $('#edit_event_content').val("");
-          $('#edit_event_address').val("");
-          $('#edit_event_lat').val("");
-          $('#edit_event_lng').val("");
-          $('#edit_event_start_date').val("");
-          $('#edit_event_end_date').val("");
-          $('#upload_pevent_result').html("");
-          $("#upload_pevent").replaceWith($("#upload_pevent").clone(true));
-          clearMap();
-          $('#gmap_helper').html("Point your marker on map.");
         });
       });
     });
@@ -754,7 +776,7 @@
 
 <div class="row">
   <div class="col-md-10 col-md-offset-1" style="margin-bottom: 50px;">
-    <h3>News</h3>
+    <h3>News (sisa tiket : <span id="sisaTicket-news">{{ $sisaticket[1] }}</span>)</h3>
 
     @if($isOwner > 0)
       <table id="table_addNews" style="width:100%;" class="">
@@ -831,7 +853,7 @@
 
 <div class="row">
   <div class="col-md-10 col-md-offset-1" style="margin-bottom: 50px;">
-    <h3>Event</h3>
+    <h3>Event (sisa tiket : <span id="sisaTicket-event">{{ $sisaticket[2] }}</span>)</h3>
 
     @if($isOwner > 0)
       <table id="table_addEvent" style="width:100%;" class="">

@@ -62,3 +62,16 @@
 .fr {
     float: right;
 }
+
+.ce {
+	text-align: center;
+}
+.ri {
+	text-align: right;
+}
+
+.text-as-label
+{
+	background:rgba(0,0,0,0);
+	border:none;
+}

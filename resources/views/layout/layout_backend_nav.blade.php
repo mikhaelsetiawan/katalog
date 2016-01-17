@@ -13,5 +13,6 @@
         <a href="{{ action('backend\controller_country@index') }}"><li> Country </li></a> 
         <a href="{{ action('backend\controller_province@index') }}"><li> Province </li></a> 
         <a href="{{ action('backend\controller_city@index') }}"><li> City </li></a> 
+        <a href="{{ action('backend\controller_ticket@index') }}"><li> Ticket </li></a>
       </ul>
 </nav>

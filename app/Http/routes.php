@@ -32,6 +32,13 @@ Route::group(['middleware' => ['web']], function () {
 				Route::post('login','controller_frontend@authLogin');
 		});
 
+		Route::group(['prefix' => '/ticket'], function () {
+				Route::get('buy', 'controller_ticket@buy');
+				Route::get('successBuy', 'controller_ticket@successBuy');
+
+				Route::post('submitBuy', 'controller_ticket@submitBuy');
+		});
+
 		Route::group(['prefix' => '/business'], function () {
 				Route::get('addBusiness','controller_business@addBusiness');
 				Route::get('list','controller_business@listBusiness');
@@ -55,7 +62,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/','controller_backend@index');
         Route::get('','controller_backend@index');
 				
-        Route::get('member','backend\controller_member@index');
+        Route::get('ticket','backend\controller_member@index');
 				Route::post('editMember','backend\controller_member@editMember');
 				Route::post('resetPass','backend\controller_member@resetPass');
 
@@ -82,6 +89,9 @@ Route::group(['middleware' => ['web']], function () {
 
 				Route::get('bclaim','backend\controller_bclaim@index');
 				Route::post('editBclaim','backend\controller_bclaim@editBclaim');
+
+				Route::get('ticket','backend\controller_ticket@index');
+				Route::post('editTicket','backend\controller_ticket@editTicket');
 
 				Route::get('admin','backend\controller_admin@index');
 				Route::post('editAdmin','backend\controller_admin@editAdmin');

@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
 			$this->call(NewsTableSeeder::class);
 			$this->call(EventTableSeeder::class);
 			$this->call(PhotosCategoryTableSeeder::class);
+			$this->call(TicketTableSeeder::class);
+			$this->call(LogTicketTableSeeder::class);
+			$this->call(BTicketTableSeeder::class);
 
     }
 }
@@ -45,8 +48,8 @@ class DatabaseSeeder extends Seeder
 	class memberTableSeeder extends Seeder {
 		public function run()
 		{
-			DB::table('member')->delete();
-			DB::table('member')->insert(array(
+			DB::table('ticket')->delete();
+			DB::table('ticket')->insert(array(
 					[
 						'member_name'=>'ABC',
 						'member_email'=>'abc@gmail.com',
@@ -308,6 +311,87 @@ class DatabaseSeeder extends Seeder
 						'business_id' => '3',
 						'pcat_name' => 'photo'
 					]
+				)
+			);
+		}
+	}
+
+	class ticketTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('ticket')->delete();
+			DB::table('ticket')->insert(array(
+					[
+						'ticket_name' => 'News',
+						'ticket_price' => '10',
+						'ticket_description' => 'Use this ticket to posting news.',
+					],
+					[
+						'ticket_name' => 'Event',
+						'ticket_price' => '15',
+						'ticket_description' => 'Use this ticket to posting event.',
+					],
+				)
+			);
+		}
+	}
+
+	class logTicketTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('log_ticket')->delete();
+			DB::table('log_ticket')->insert(array(
+					[
+						'ticket_id' => '1',
+						'logticket_price' => '10'
+					],
+					[
+						'ticket_id' => '2',
+						'logticket_price' => '15'
+					],
+				)
+			);
+		}
+	}
+
+	class bTicketTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('bticket')->delete();
+			DB::table('bticket')->insert(array(
+					[
+						'ticket_id' => '1',
+						'business_id' => '1',
+						'bticket_amount' => '3'
+					],
+					[
+						'ticket_id' => '2',
+						'business_id' => '1',
+						'bticket_amount' => '3'
+					],
+					[
+						'ticket_id' => '1',
+						'business_id' => '2',
+						'bticket_amount' => '3'
+					],
+					[
+						'ticket_id' => '2',
+						'business_id' => '2',
+						'bticket_amount' => '3'
+					],
+					[
+						'ticket_id' => '1',
+						'business_id' => '3',
+						'bticket_amount' => '3'
+					],
+					[
+						'ticket_id' => '2',
+						'business_id' => '3',
+						'bticket_amount' => '3'
+					],
 				)
 			);
 		}
