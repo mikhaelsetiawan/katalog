@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
 			$this->call(TicketTableSeeder::class);
 			$this->call(LogTicketTableSeeder::class);
 			$this->call(BTicketTableSeeder::class);
+			$this->call(eScheduleTableSeeder::class);
+			$this->call(eRegistrationTableSeeder::class);
 
     }
 }
@@ -271,22 +273,12 @@ class DatabaseSeeder extends Seeder
 						'business_id' => '1',
 						'event_title' => 'Seminar Meningkatkan Produksi Produk',
 						'event_content' => 'Kami mengadakan seminar meningkatkan produksi produk dengan cepat.',
-						'event_address' => 'Jalan ABC no 1-3',
-						'event_lat' => '-7.246582985239078',
-						'event_lng' => '112.73772828564461',
-						'event_start_date' => '2016-01-05 06:00:00',
-						'event_end_date' => '2016-01-05 18:00:00',
 					],
 					[
 						'member_id' => '2',
 						'business_id' => '2',
 						'event_title' => 'Bazaar Murah',
 						'event_content' => 'Kami mengadakan bazaar murah dalam rangka ulang tahun perusahaan kami.',
-						'event_address' => 'Jalan DEF no 4-7',
-						'event_lat' => '-7.2953848501891825',
-						'event_lng' => '112.730426795315',
-						'event_start_date' => '2016-01-12 06:00:00',
-						'event_end_date' => '2016-01-15 18:00:00',
 					],
 				)
 			);
@@ -391,6 +383,80 @@ class DatabaseSeeder extends Seeder
 						'ticket_id' => '2',
 						'business_id' => '3',
 						'bticket_amount' => '3'
+					],
+				)
+			);
+		}
+	}
+
+	class eScheduleTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('eschedule')->delete();
+			DB::table('eschedule')->insert(array(
+					[
+						'event_id' => '1',
+						'eschedule_address' => 'Jalan ABC no 1-3',
+						'eschedule_lat' => '-7.246582985239078',
+						'eschedule_lng' => '112.73772828564461',
+						'eschedule_start_date' => '2016-01-05 06:00:00',
+						'eschedule_end_date' => '2016-01-05 18:00:00',
+					],
+					[
+						'event_id' => '1',
+						'eschedule_address' => 'Jalan ABC no 1-3',
+						'eschedule_lat' => '-7.246582985239078',
+						'eschedule_lng' => '112.73772828564461',
+						'eschedule_start_date' => '2016-01-06 06:00:00',
+						'eschedule_end_date' => '2016-01-06 18:00:00',
+					],
+					[
+						'event_id' => '1',
+						'eschedule_address' => 'Jalan ABC no 1-3',
+						'eschedule_lat' => '-7.246582985239078',
+						'eschedule_lng' => '112.73772828564461',
+						'eschedule_start_date' => '2016-01-07 06:00:00',
+						'eschedule_end_date' => '2016-01-07 18:00:00',
+					],
+					[
+						'event_id' => '2',
+						'eschedule_address' => 'Jalan DEF no 4-5',
+						'eschedule_lat' => '-7.246582985239078',
+						'eschedule_lng' => '112.73772828564461',
+						'eschedule_start_date' => '2016-02-17 06:00:00',
+						'eschedule_end_date' => '2016-01-17 18:00:00',
+					],
+					[
+						'event_id' => '2',
+						'eschedule_address' => 'Jalan DEF no 4-5',
+						'eschedule_lat' => '-7.246582985239078',
+						'eschedule_lng' => '112.73772828564461',
+						'eschedule_start_date' => '2016-02-17 19:00:00',
+						'eschedule_end_date' => '2016-01-18 00:00:00',
+					],
+				)
+			);
+		}
+	}
+
+	class eRegistrationTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('eregistration')->delete();
+			DB::table('eregistration')->insert(array(
+					[
+						'eschedule_id' => '1',
+						'member_id' => '1',
+					],
+					[
+						'eschedule_id' => '2',
+						'member_id' => '2',
+					],
+					[
+						'eschedule_id' => '3',
+						'member_id' => '3',
 					],
 				)
 			);

@@ -20,6 +20,7 @@ class CreateModelTicketD extends Migration
 						$table->integer('ticketD_amount')->default(0);
 						$table->integer('ticketD_price')->default(0);
 						$table->integer('ticketD_subtotal')->default(0);
+						$table->tinyInteger('ticketD_status')->default(1);
             $table->timestamps();
         });
 

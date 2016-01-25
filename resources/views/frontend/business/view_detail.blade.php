@@ -131,7 +131,7 @@
         {
             display: inline-block;
         }
-        #map { height: 300px;width: 600px; }
+        .map { height: 300px;width: 600px; }
 	</style>
 
 	  {!! Html::script('js/massimgcompress.js'); !!}
@@ -254,10 +254,10 @@
           photos['pevent'+i+'_caption'] = $('#pevent'+i+'_caption').val();
         }
 
-        if(countMark > 0)
+        if(countMark[index] > 0)
         {
-          var lat =  markersArray[0].getPosition().lat();
-          var lng = markersArray[0].getPosition().lng();
+          var lat =  markersArray[index][0].getPosition().lat();
+          var lng = markersArray[index][0].getPosition().lng();
           $("#edit_event_lat").val(lat);
           $("#edit_event_lng").val(lng);
         }else{
@@ -331,7 +331,7 @@
             $('#upload_pevent_result').html("");
             $("#upload_pevent").replaceWith($("#upload_pevent").clone(true));
             clearMap();
-            $('#gmap_helper').html("Point your marker on map.");
+            $('#gmap_helper-'+index).html("Point your marker on map.");
             sisaTicketEvent--;
             $("#sisaTicket-event").html(sisaTicketEvent);
           }
@@ -409,19 +409,25 @@
 
 
     <script type="text/javascript">
-    var map;
+    var indexEschedule = 1;
+    var saveEschedule = [];
+    var countMap = 1;
+    var map = [];
     var markersArray = [];
-    var countMark = 0;
-    var geocoder = '';
+    var countMark = [];
+    var geocoder = [];
 
     $(window).load(function(){
-        initMap();
+        initMap(1);
     });
 
-    function initMap(inlat, inlng) {
-      geocoder = new google.maps.Geocoder();
-      markersArray = [];
-      countMark = 0;
+    function initMap(index,inlat, inlng) {
+      if(index > 1)
+      {
+        saveEschedule.push(index);
+      }
+      geocoder[index] = new google.maps.Geocoder();
+      countMark[index] = 0;
       var isFilled = false;
       var lat = -7.257822;
       var lng = 112.746998;
@@ -443,7 +449,7 @@
         center: new google.maps.LatLng(lat,lng),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
-      map = new google.maps.Map(document.getElementById('map'),mapOptions);
+       map[index]= new google.maps.Map(document.getElementById('map-'+index),mapOptions);
 
       /*google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
@@ -460,108 +466,119 @@
           //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
         });
 
-        google.maps.event.addListener(marker, 'dblclick', removeMark);
-        google.maps.event.addListener(marker, 'dragend', dragMark);
+        google.maps.event.addListener(marker, 'dblclick', function(event){
+          removeMark(index,this.getPosition());
+        });
+        google.maps.event.addListener(marker, 'dragend', function(event){
+          dragMark(index)
+        });
 
-        markersArray.push(marker);
-        markersArray[countMark].setMap(map);
-        countMark++;
+        markersArray[index].push(marker);
+        markersArray[index][countMark[index]].setMap(map[index]);
+        countMark[index]++;
       }else{
-        google.maps.event.addListener(map, 'click', function(event) {
-          addMarker(event.latLng);
+        google.maps.event.addListener(map[index], 'click', function(event) {
+          addMarker(index,event.latLng);
         });
       }
     }
 
-    function addMarker(location) {
-      if(countMark == 0)
+    function addMarker(index,location) {
+      if(countMark[index] == 0)
       {
         var x=location.lat();
         var y=location.lng();
         marker = new google.maps.Marker({
           position: location,
-          map: map,
+          map: map[index],
           draggable:true,
           animation: google.maps.Animation.DROP,
           title:"Your building location",
           //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
         });
-        countMark++;
-        google.maps.event.addListener(marker, 'dblclick', removeMark);
-        google.maps.event.addListener(marker, 'dragend', dragMark);
-        markersArray.push(marker);
-        var lat =  markersArray[0].getPosition().lat();
-        var lng = markersArray[0].getPosition().lng();
-        codeCoord(lat,lng);
+        countMark[index]++;
+        google.maps.event.addListener(marker, 'dblclick', function(event){
+          removeMark(index,this.getPosition())
+        });
+        google.maps.event.addListener(marker, 'dragend', function(event){
+          dragMark(index)
+        });
+        markersArray[index] = [];
+        markersArray[index].push(marker);
+        var lat =  markersArray[index][0].getPosition().lat();
+        var lng = markersArray[index][0].getPosition().lng();
+        codeCoord(index,lat,lng);
 //        alert(countMark);
       }
     }
 
-    function removeMark() {
+    function removeMark(index,position) {
       var hapusMark;
       var countUlang=1;
-      for(i in markersArray){
-        if(markersArray[i].getPosition() == this.getPosition()){
+      for(i in markersArray[index]){
+        if(markersArray[index][i].getPosition() == position){
           hapusMark=i;
         }else{
-          markersArray[i].setTitle(countUlang+"");
+          markersArray[index][i].setTitle(countUlang+"");
           countUlang++;
         }
       }
-      markersArray[hapusMark].setMap(null);
-      markersArray.splice(hapusMark,1);
-      $('#gmap_helper').html("Point your marker on map.");
-      countMark--;
+      markersArray[index][hapusMark].setMap(null);
+      markersArray[index].splice(hapusMark,1);
+      $('#gmap_helper-'+index).html("Point your marker on map.");
+      countMark[index]--;
 //      alert(countMark);
     }
 
-    function clearMap()
+    function clearMap(index)
     {
-      for (var i = 0; i < markersArray.length; i++) {
-        markersArray[i].setMap(null);
+      for (var i = 0; i < markersArray[index].length; i++) {
+        markersArray[index][i].setMap(null);
       }
-      markersArray = [];
-      countMark = 0;
+      markersArray[index] = [];
+      countMark[index] = 0;
     }
 
-    function codeCoord(lat,lng)
+    function codeCoord(index,lat,lng)
     {
 //      var latLng = new Array(lat,lng);
       var latLng = new google.maps.LatLng(lat,lng);
       //console.log(latLng);
-      geocoder.geocode( { 'location':latLng}, function(results, status) {
+      geocoder[index].geocode( { 'location':latLng}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        $('#gmap_helper').html(results[0].formatted_address);
+        $('#gmap_helper-'+index).html(results[0].formatted_address);
         console.log('done');
       }
       else{
-        $('#gmap_helper').html("Point your marker on map.");
+        $('#gmap_helper-'+index).html("Point your marker on map.");
         console.log('fail');
       }
       });
     }
 
-    function codeAddress(alamat)
+    function codeAddress(index,alamat)
     {
       var sAddress = '';
       if(typeof alamat == 'undefined')
       {
-        sAddress = $("#edit_event_address").val();
+        sAddress = $("#edit_event_address-"+index).val();
       }else{
         sAddress = alamat;
       }
-      geocoder.geocode( { 'address': sAddress}, function(results, status) {
+      geocoder[index].geocode( { 'address': sAddress}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
+        map[index].setCenter(results[0].geometry.location);
+        //alert(countMark[index]);
 //        if(tipe=='Point'){
-          if(countMark == 0)
+          if(countMark[index] == 0)
           {
-            addMarker(results[0].geometry.location);
+            addMarker(index,results[0].geometry.location);
           }else{
-            markersArray[0].setPosition(results[0].geometry.location);
+            markersArray[index][0].setPosition(results[0].geometry.location);
           }
 //        }
         //alert('done');
+        codeCoord(index,results[0].geometry.location.lat(),results[0].geometry.location.lng());
         console.log('done');
       }
       else{
@@ -572,14 +589,61 @@
       });
     }
 
-    function dragMark()
+    function dragMark(index)
     {
-      var lat =  markersArray[0].getPosition().lat();
-      var lng = markersArray[0].getPosition().lng();
-      codeCoord(lat,lng);
+      var lat =  markersArray[index][0].getPosition().lat();
+      var lng = markersArray[index][0].getPosition().lng();
+      codeCoord(index,lat,lng);
     }
     </script>
 
+    <script type="text/javascript">
+      function addMoreEschedule()
+      {
+        indexEschedule++;
+        var item = '<tr>' +
+          '<td colspan="3">' +
+          '<hr/>' +
+            '<table>' +
+              '<colgroup>' +
+                '<col style="width: 150px;"/>' +
+                '<col style="width: 10px;"/>' +
+                '<col style=""/>' +
+              '</colgroup>' +
+              '<tbody>' +
+                '<tr>' +
+                  '<td>Event date</td>' +
+                  '<td>:</td>' +
+                  '<td>' +
+                    '<input type="text" name="event_start_date" id="edit_event_start_date-'+ indexEschedule +'" class="form-control" placeholder="Start date" style="width:200px;display:inline;"/> - <input type="text" name="event_end_date" id="edit_event_end_date-'+ indexEschedule +'" class="form-control" placeholder="End date" style="width:200px;display:inline;"/>' +
+                  '</td>' +
+                '</tr>' +
+                '<tr>' +
+                  '<td style="vertical-align: top;">Address</td>' +
+                  '<td style="vertical-align: top;">:</td>' +
+                  '<td>' +
+                    '<input type="text" name="event_address" id="edit_event_address-'+ indexEschedule +'" class="form-control" placeholder="Address" />'+
+                    '<button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>' +
+                  '</td>' +
+                '</tr>' +
+                '<tr>' +
+                  '<td style="vertical-align: top;">Point your location</td>' +
+                  '<td style="vertical-align: top;">:</td>' +
+                  '<td>' +
+                    '<input type="hidden" name="event_lat" id="edit_event_lat-'+indexEschedule+'" />' +
+                    '<input type="hidden" name="event_lng" id="edit_event_lng-'+indexEschedule+'" />' +
+                    '<span class="control-label" id="gmap_helper-'+indexEschedule+'">Point your marker on map.</span>' +
+                    '<div id="map-'+indexEschedule+'" class="map"></div>' +
+                  '</td>' +
+                '</tr>' +
+              '</tbody>' +
+            '</table>' +
+          '</td>' +
+        '</tr>';
+        $('#tr-post-event').before(item);
+        initMap(indexEschedule);
+      }
+    </script>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2EnG_QKTlVAVCEkfba_rlej5-rbC0sSI&sensor=false&libraries=geometry,places">
     </script>
@@ -888,46 +952,6 @@
           </td>
         </tr>
         <tr>
-          <td>Event date</td>
-          <td>:</td>
-          <td>
-            {!! Form::input('text','event_start_date',null, [
-                            'id'    => 'edit_event_start_date',
-                            'class' => 'form-control',
-                            'placeholder' => 'Start date',
-                            'style'=>'width:200px;display:inline;'
-                            ]) !!} -
-            {!! Form::input('text','event_end_date',null, [
-                            'id'    => 'edit_event_end_date',
-                            'class' => 'form-control',
-                            'placeholder' => 'End date',
-                            'style'=>'width:200px;display:inline;'
-                            ]) !!}
-          </td>
-        </tr>
-        <tr>
-          <td>Address</td>
-          <td>:</td>
-          <td>
-            {!! Form::input('text','event_address',null, [
-                            'id'    => 'edit_event_address',
-                            'class' => 'form-control',
-                            'placeholder' => 'Address'
-                            ]) !!}
-                      <button type="button" class="btn btn-success btn-sm" onclick="codeAddress()">Point it at maps.</button>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">Point your location</td>
-          <td style="vertical-align: top;">:</td>
-          <td>
-            <input type="hidden" name="event_lat" id="edit_event_lat" />
-            <input type="hidden" name="event_lng" id="edit_event_lng" />
-            <span class="control-label" id="gmap_helper">Point your marker on map.</span>
-            <div id="map"></div>
-          </td>
-        </tr>
-        <tr>
           <td style="vertical-align: top;">Upload</td>
           <td style="vertical-align: top;">:</td>
           <td>
@@ -937,9 +961,67 @@
           </td>
         </tr>
         <tr>
+          <td colspan="3">
+          <hr/>
+            <table>
+              <colgroup>
+                <col style="width: 150px;"/>
+                <col style="width: 10px;"/>
+                <col style=""/>
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td>Event date</td>
+                  <td>:</td>
+                  <td>
+                    {!! Form::input('text','event_start_date',null, [
+                                    'id'    => 'edit_event_start_date-1',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Start date',
+                                    'style'=>'width:200px;display:inline;'
+                                    ]) !!} -
+                    {!! Form::input('text','event_end_date',null, [
+                                    'id'    => 'edit_event_end_date-1',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'End date',
+                                    'style'=>'width:200px;display:inline;'
+                                    ]) !!}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">Address</td>
+                  <td style="vertical-align: top;">:</td>
+                  <td>
+                    {!! Form::input('text','event_address',null, [
+                                    'id'    => 'edit_event_address-1',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Address'
+                                    ]) !!}
+                              <button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">Point your location</td>
+                  <td style="vertical-align: top;">:</td>
+                  <td>
+                    <input type="hidden" name="event_lat" id="edit_event_lat-1" />
+                    <input type="hidden" name="event_lng" id="edit_event_lng-1" />
+                    <span class="control-label" id="gmap_helper-1">Point your marker on map.</span>
+                    <div id="map-1" class="map"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr id="tr-post-event">
           <td colspan="2"></td>
           <td>
-            <button type="button" id="button_post_event" class="btn btn-success fr">Post</button>
+            <button type="button" id="button_post_event" style="margin-left:5px;" class="btn btn-success btn-sm pull-right">Post</button>
+            <button class="btn btn-primary btn-sm pull-right" type="button" onclick="addMoreEschedule()">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="hidden-sm" style="margin-left: 6px;">Add More Schedule</span>
+            </button>
           </td>
         </tr>
       </table>
@@ -957,19 +1039,44 @@
               <div class="cb"></div>
             </div>
           @endif
-          <p class="address">Address : {!! $event->event_address !!}</p>
-          <p class="datetime">Date : {!! date_format(new DateTime($event->event_start_date), 'd-M-Y H:i:s') . ' &nbsp;until&nbsp; '. date_format(new DateTime($event->event_end_date), 'd-M-Y H:i:s') !!}</p>
-          <?php
-            $latlng = $event->event_lat.','.$event->event_lng;
-            $mapItem = '';
-            if($event->event_lat != '' && $event->event_lng != '')
-            {
-              $mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='. $latlng .'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'. $latlng .'"/>';
-            }
-          ?>
-          <p class="location">Location:<br/>
-            {!! $mapItem !!}
-          </p>
+          @foreach($event->schedule as $schedule)
+            <div class="schedule">
+              <table>
+                <colgroups>
+                  <col style="width: 150px;"/>
+                  <col style=""/>
+                  <col style=""/>
+                </colgroups>
+                <tbody>
+                  <tr>
+                    <td>Address</td>
+                    <td>:</td>
+                    <td>{!! $schedule->eschedule_address !!}</td>
+                  </tr>
+                  <tr>
+                    <td>Date & Time</td>
+                    <td>:</td>
+                    <td>{!! date_format(new DateTime($schedule->eschedule_start_date), 'd-M-Y H:i:s') . ' &nbsp;until&nbsp; '. date_format(new DateTime($schedule->eschedule_end_date), 'd-M-Y H:i:s') !!}</td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: top;">Location</td>
+                    <td style="vertical-align: top;">:</td>
+                    <td>
+                      <?php
+                        $latlng = $schedule->eschedule_lat.','.$schedule->eschedule_lng;
+                        $mapItem = '';
+                        if($schedule->eschedule_lat != '' && $schedule->eschedule_lng != '')
+                        {
+                          $mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='. $latlng .'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'. $latlng .'"/>';
+                        }
+                      ?>
+                      {!! $mapItem !!}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          @endforeach
           <p class="date">
             {{--<span class="button_edit">Edit</span>--}}
             <span class="button_delete" onclick="popupDeleteEvent({!! $event->event_id !!})">Delete</span>

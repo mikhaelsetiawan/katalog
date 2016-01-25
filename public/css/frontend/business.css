@@ -72,6 +72,19 @@
 {
 }
 
+.div_event .item .schedule
+{
+	margin: 5px;
+	margin-bottom: 20px;
+	border: 1px solid #e7e7e7;
+	padding:10px;
+}
+
+.div_event .item .schedule table
+{
+	width: 100%;
+}
+
 .div_event .item .location .map_img
 {
 	width: 600px;

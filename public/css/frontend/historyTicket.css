@@ -1,4 +1,4 @@
-.history-ticket-container .piece
+.history-ticket-container .item
 {
 	background-color: #f8f8f8;
 	border: 1px solid #e7e7e7;
@@ -6,33 +6,33 @@
 	margin-bottom: 10px;
 }
 
-.history-ticket-container .piece .content
+.history-ticket-container .item .content
 {
 	margin-bottom: 20px;
 }
 
-.history-ticket-container .piece p.header
+.history-ticket-container .item p.header
 {
 	font-size: 18px;
 	font-weight: 500;
 }
-.history-ticket-container .piece .content .table-info
+.history-ticket-container .item .content .table-info
 {
 	width: 30%;
 }
 
-.history-ticket-container .piece .details table.table-detail
+.history-ticket-container .item .details table.table-detail
 {
 	width: 100%;
 }
 
-.history-ticket-container .piece .details table.table-detail th
+.history-ticket-container .item .details table.table-detail th
 {
 	font-size: 14px;
 	font-weight: 400;
 }
 
-.history-ticket-container .piece p.show-more
+.history-ticket-container .item p.show-more
 {
 	text-align: center;
 	cursor: pointer;

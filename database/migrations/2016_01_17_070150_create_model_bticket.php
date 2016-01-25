@@ -17,6 +17,7 @@ class CreateModelBticket extends Migration
 						$table->unsignedInteger('ticket_id');
 						$table->unsignedInteger('business_id');
 						$table->integer('bticket_amount');
+						$table->tinyInteger('bticket_status')->default(1);
             $table->timestamps();
         });
 

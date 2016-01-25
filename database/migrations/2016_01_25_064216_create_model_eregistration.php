@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateModelTicketH extends Migration
+class CreateModelEregistration extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,19 @@ class CreateModelTicketH extends Migration
      */
     public function up()
     {
-        Schema::create('ticketH', function (Blueprint $table) {
-            $table->increments('ticketH_id');
+        Schema::create('eregistration', function (Blueprint $table) {
+            $table->increments('eregistration_id');
+						$table->unsignedInteger('eschedule_id');
 						$table->unsignedInteger('member_id');
-						$table->integer('ticketH_total')->default(0);
-						$table->tinyInteger('ticketH_status')->default(1);
+						$table->tinyInteger('eregistration_status')->default(1);
             $table->timestamps();
         });
 
-			Schema::table('ticketH', function(Blueprint $table) {
+			Schema::table('eregistration', function(Blueprint $table) {
+					$table->foreign('eschedule_id')
+						->references('eschedule_id')
+						->on('eschedule')
+						->onDelete('cascade');
 					$table->foreign('member_id')
 						->references('member_id')
 						->on('member')
@@ -35,6 +39,6 @@ class CreateModelTicketH extends Migration
      */
     public function down()
     {
-        Schema::drop('ticketH');
+        Schema::drop('eregistration');
     }
 }

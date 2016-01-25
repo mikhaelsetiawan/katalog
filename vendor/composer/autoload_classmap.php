@@ -12,6 +12,8 @@ return array(
     'CreateModelBusiness' => $baseDir . '/database/migrations/2015_12_28_080310_create_model_business.php',
     'CreateModelBusinessClaim' => $baseDir . '/database/migrations/2016_01_01_105036_create_model_business_claim.php',
     'CreateModelBusinessField' => $baseDir . '/database/migrations/2015_12_28_080309_create_model_business_field.php',
+    'CreateModelEregistration' => $baseDir . '/database/migrations/2016_01_25_064216_create_model_eregistration.php',
+    'CreateModelEschedule' => $baseDir . '/database/migrations/2016_01_25_063515_create_model_eschedule.php',
     'CreateModelEvent' => $baseDir . '/database/migrations/2016_01_08_015758_create_model_event.php',
     'CreateModelExtCity' => $baseDir . '/database/migrations/2015_12_28_000004_create_model_ext_city.php',
     'CreateModelExtCountry' => $baseDir . '/database/migrations/2015_12_28_000002_create_model_ext_country.php',

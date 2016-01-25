@@ -30,6 +30,10 @@ class model_event extends Model{
 		return $this->hasMany('App\Models\model_photos_event','event_id', 'event_id')->where(array('pevent_status'=>'1'))->orderBy('created_at',SORT_DESC);
 	}
 
+	public function schedule()
+	{
+		return $this->hasMany('App\Models\model_eschedule','event_id', 'event_id')->where(array('eschedule_status'=>'1'))->orderBy('created_at',SORT_DESC);
+	}
 
 	public function business()
 	{
