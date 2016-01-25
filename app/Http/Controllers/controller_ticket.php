@@ -5,6 +5,8 @@ use App\Models\model_bticket;
 use App\Models\model_business;
 use App\Models\model_member;
 use App\Models\model_ticket;
+use App\Models\model_ticketD;
+use App\Models\model_ticketH;
 
 class controller_ticket extends Controller {
 
@@ -46,18 +48,39 @@ class controller_ticket extends Controller {
 		$member_id = auth()->guard('member')->user()->member_id;
 		$model_member = model_member::find($member_id);
 		$total = 0;
-		for($i = 0; $i < count($_POST['ticket_id']); $i++ )
-		{
-			$model_bticket = model_bticket::where(['ticket_id'=>$_POST['ticket_id'][$i],'business_id'=>$_POST['business_id'][$i]])->first();
-			$model_bticket->bticket_amount += $_POST['bticket_amount'][$i];
-			$model_bticket->save();
 
-			$model_ticket = model_ticket::find($_POST['ticket_id'][$i]);
-			$subtotal = $_POST['bticket_amount'][$i]*$model_ticket->ticket_price;
-			$total += $subtotal;
+		$model_ticketH = new model_ticketH();
+		$data = array();
+		$data['member_id'] = $member_id;
+		$model_ticketH->fill($data);
+		if($model_ticketH->save())
+		{
+			for ($i = 0; $i < count($_POST['ticket_id']); $i++) {
+				$model_bticket = model_bticket::where(['ticket_id' => $_POST['ticket_id'][$i], 'business_id' => $_POST['business_id'][$i]])->first();
+				$model_bticket->bticket_amount += $_POST['bticket_amount'][$i];
+				$model_bticket->save();
+
+				$model_ticket = model_ticket::find($_POST['ticket_id'][$i]);
+				$subtotal = $_POST['bticket_amount'][$i] * $model_ticket->ticket_price;
+				$total += $subtotal;
+
+				$model_ticketD = new model_ticketD();
+				$data = array();
+				$data['ticketH_id'] = $model_ticketH->ticketH_id;
+				$data['business_id'] = $_POST['business_id'][$i];
+				$data['ticket_id'] = $_POST['ticket_id'][$i];
+				$data['ticketD_amount'] = $_POST['bticket_amount'][$i];
+				$data['ticketD_price'] = $model_ticket->ticket_price;
+				$data['ticketD_subtotal'] = $subtotal;
+				$model_ticketD->create($data);
+			}
 		}
+		$model_ticketH['ticketH_total'] = $total;
+		$model_ticketH->save();
+
 		$model_member->member_coin -= $total;
 		$model_member->save();
+
 		return redirect('/ticket/successBuy')->withErrors($err);
 	}
 

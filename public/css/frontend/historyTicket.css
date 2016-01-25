@@ -1,0 +1,40 @@
+.history-ticket-container .piece
+{
+	background-color: #f8f8f8;
+	border: 1px solid #e7e7e7;
+	padding:10px;
+	margin-bottom: 10px;
+}
+
+.history-ticket-container .piece .content
+{
+	margin-bottom: 20px;
+}
+
+.history-ticket-container .piece p.header
+{
+	font-size: 18px;
+	font-weight: 500;
+}
+.history-ticket-container .piece .content .table-info
+{
+	width: 30%;
+}
+
+.history-ticket-container .piece .details table.table-detail
+{
+	width: 100%;
+}
+
+.history-ticket-container .piece .details table.table-detail th
+{
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.history-ticket-container .piece p.show-more
+{
+	text-align: center;
+	cursor: pointer;
+	display: none;
+}

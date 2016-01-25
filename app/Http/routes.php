@@ -39,6 +39,10 @@ Route::group(['middleware' => ['web']], function () {
 				Route::post('submitBuy', 'controller_ticket@submitBuy');
 		});
 
+		Route::group(['prefix' => '/member'], function () {
+				Route::get('historyOrderTicket', 'controller_member@historyOrderTicket');
+		});
+
 		Route::group(['prefix' => '/business'], function () {
 				Route::get('addBusiness','controller_business@addBusiness');
 				Route::get('list','controller_business@listBusiness');

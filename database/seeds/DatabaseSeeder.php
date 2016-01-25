@@ -48,8 +48,8 @@ class DatabaseSeeder extends Seeder
 	class memberTableSeeder extends Seeder {
 		public function run()
 		{
-			DB::table('ticket')->delete();
-			DB::table('ticket')->insert(array(
+			DB::table('member')->delete();
+			DB::table('member')->insert(array(
 					[
 						'member_name'=>'ABC',
 						'member_email'=>'abc@gmail.com',

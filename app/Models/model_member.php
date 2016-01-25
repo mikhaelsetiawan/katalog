@@ -101,6 +101,11 @@ class model_member extends Model implements AuthenticatableContract, CanResetPas
 		return $this->belongsTo('App\Models\model_ext_city','city_code', 'city_code');
 	}
 
+	public function historyOrderTicket()
+	{
+		return $this->hasMany('App\Models\model_ticketH','member_id');
+	}
+
 	public function getAuthPassword() {
 		return $this->member_password;
 	}
