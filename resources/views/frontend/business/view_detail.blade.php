@@ -298,7 +298,7 @@
 
           if(data == 0)
           {
-            alert("Post news failed.");
+            alert("Post event failed.");
           }else if(data == 1)
           {
             alert("Tiket untuk melakukan post event telah habis.");
@@ -541,7 +541,7 @@
     });
 
     function initMap(index,inlat, inlng) {
-    console.log(countMark[index]);
+    //console.log(countMark[index]);
       if(index > 1)
       {
         saveEschedule.push(index);
@@ -604,7 +604,7 @@
     }
 
     function addMarker(index,location) {
-    console.log(countMark[index]);
+    //console.log(countMark[index]);
       if(countMark[index] == 0)
       {
         var x=location.lat();
@@ -668,11 +668,11 @@
       geocoder[index].geocode( { 'location':latLng}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         $('#gmap_helper-'+index).html(results[0].formatted_address);
-        console.log('done');
+        //console.log('done');
       }
       else{
         $('#gmap_helper-'+index).html("Point your marker on map.");
-        console.log('fail');
+        //console.log('fail');
       }
       });
     }
@@ -700,10 +700,10 @@
 //        }
         //alert('done');
         codeCoord(index,results[0].geometry.location.lat(),results[0].geometry.location.lng());
-        console.log('done');
+        //console.log('done');
       }
       else{
-        console.log('fail');
+        //console.log('fail');
         //jika tidak bisa lakukan sesuatu
         //codeAddress('Jimerto, Surabaya, East Java, Indonesia');
       }
@@ -722,10 +722,10 @@
       function addMoreEschedule()
       {
         indexEschedule++;
-        var item = '<tr class="new-eschedule" id="new-eschedule-"'+indexEschedule+'>' +
+        var item = '<tr class="new-eschedule" id="new-eschedule-'+indexEschedule+'">' +
           '<td colspan="3">' +
           '<hr/>' +
-            '<table>' +
+            '<table style="width:100%;">' +
               '<colgroup>' +
                 '<col style="width: 150px;"/>' +
                 '<col style="width: 10px;"/>' +
@@ -737,13 +737,16 @@
                   '<td>:</td>' +
                   '<td>' +
                     '<input type="text" name="event_start_date" id="edit_event_start_date-'+ indexEschedule +'" class="form-control" placeholder="Start date" style="width:200px;display:inline;"/> - <input type="text" name="event_end_date" id="edit_event_end_date-'+ indexEschedule +'" class="form-control" placeholder="End date" style="width:200px;display:inline;"/>' +
+                    '<button type="button" style="" onclick="deleteESchedule('+indexEschedule+')" class="btn btn-danger btn-sm pull-right" >' +
+                      '<span class="glyphicon glyphicon-remove"></span>' +
+                    '</button>'+
                   '</td>' +
                 '</tr>' +
                 '<tr>' +
                   '<td style="vertical-align: top;">Address</td>' +
                   '<td style="vertical-align: top;">:</td>' +
                   '<td>' +
-                    '<input type="text" name="event_address" id="edit_event_address-'+ indexEschedule +'" class="form-control" placeholder="Address" />'+
+                    '<input type="text" name="event_address" id="edit_event_address-'+ indexEschedule +'" class="form-control" placeholder="Address" style="width:411px;" />'+
                     '<button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>' +
                   '</td>' +
                 '</tr>' +
@@ -763,6 +766,23 @@
         '</tr>';
         $('#tr-post-event').before(item);
         initMap(indexEschedule);
+      }
+
+      function deleteESchedule(index)
+      {
+        //console.log(saveEschedule);
+        var removethis = -1;
+        for(var i = 0; i < saveEschedule.length; i++)
+        {
+          if(saveEschedule[i] == index)
+          {
+            removethis = i;
+            break;
+          }
+        }
+        saveEschedule.splice(removethis,1)
+        $("#new-eschedule-"+index).remove();
+        //console.log(saveEschedule);
       }
     </script>
     <script async defer
@@ -1084,7 +1104,7 @@
         <tr>
           <td colspan="3">
           <hr/>
-            <table>
+            <table style="width:100%">
               <colgroup>
                 <col style="width: 150px;"/>
                 <col style="width: 10px;"/>
@@ -1116,7 +1136,8 @@
                     {!! Form::input('text','event_address',null, [
                                     'id'    => 'edit_event_address-1',
                                     'class' => 'form-control',
-                                    'placeholder' => 'Address'
+                                    'placeholder' => 'Address',
+                                    'style'=>'width:411px;'
                                     ]) !!}
                               <button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>
                   </td>
