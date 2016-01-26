@@ -254,7 +254,36 @@
           photos['pevent'+i+'_caption'] = $('#pevent'+i+'_caption').val();
         }
 
-        if(countMark[index] > 0)
+        var latLng = [];
+        var address = [];
+        var datetime = [];
+
+        if(countMark[1] > 0)
+        {
+          var lat =  markersArray[1][0].getPosition().lat();
+          var lng = markersArray[1][0].getPosition().lng();
+          latLng.push([lat,lng]);
+          address.push($("#edit_event_address-"+1).val());
+          var startdate = $("#edit_event_start_date-"+1).val();
+          var enddate = $("#edit_event_end_date-"+1).val();
+          datetime.push(startdate,enddate);
+        }
+
+        for(var i = 0; i < saveEschedule.length; i++)
+        {
+          var index = saveEschedule[i];
+          if(countMark[index] > 0)
+          {
+            var lat =  markersArray[index][0].getPosition().lat();
+            var lng = markersArray[index][0].getPosition().lng();
+            latLng.push([lat,lng]);
+            address.push($("#edit_event_address-"+index).val());
+            var startdate = $("#edit_event_start_date-"+index).val();
+            var enddate = $("#edit_event_end_date-"+index).val();
+            datetime.push([startdate,enddate]);
+          }
+        }
+        /*if(countMark[index] > 0)
         {
           var lat =  markersArray[index][0].getPosition().lat();
           var lng = markersArray[index][0].getPosition().lng();
@@ -264,23 +293,9 @@
           $("#edit_event_lat").val("");
           $("#edit_event_lng").val("");
         }
+*/
+        var callbackSubmitEvent = function(data) {
 
-        $.post('{{ action('controller_business@submitAddEvent') }}',
-                {
-                  _token:'{{ csrf_token() }}',
-                  _type:1,
-                  member_id:'{{ $member_id }}',
-                  business_id:'{{ $business->business_id }}',
-                  event_title:$('#edit_event_title').val(),
-                  event_content:$('#edit_event_content').val(),
-                  event_address:$('#edit_event_address').val(),
-                  event_lat:$('#edit_event_lat').val(),
-                  event_lng:$('#edit_event_lng').val(),
-                  event_start_date:$('#edit_event_start_date').val(),
-                  event_end_date:$('#edit_event_end_date').val(),
-                  photos:JSON.stringify(photos)
-                },function(data)
-        {
           if(data == 0)
           {
             alert("Post news failed.");
@@ -301,40 +316,144 @@
             }
             photos += '<div class="cb"></div>';
 
-            var latlng = $('#edit_event_lat').val()+','+$('#edit_event_lng').val();
-            var mapItem = '';
-            if($('#edit_event_lat').val() != '' && $('#edit_event_lng').val() != '')
-            {
-              mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='+latlng+'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'+latlng+'" />';
-            }
             var item = '<div class="item" id="event_'+data.event_id+'">' +
                           '<p class="title">'+$('#edit_event_title').val()+'</p>' +
                           '<p class="content">'+$('#edit_event_content').val()+'</p>' +
-                            photos +
-                          '<p class="address">Address : '+$('#edit_event_address').val()+'</p>' +
-                          '<p class="datetime">Date : '+$('#edit_event_start_date').val()+' until '+$('#edit_event_end_date').val()+'</p>' +
-                          '<p class="location">'+mapItem+'</p>' +
-                          '<p class="date">' +
-                            '<span class="button_edit">Edit</span>' +
-                            '<span class="button_delete">Delete</span>' +
-                            data.created_at+
-                          '</p>' +
-                        '</div>';
+                            photos;
+
+            var lat =  markersArray[1][0].getPosition().lat();
+            var lng = markersArray[1][0].getPosition().lng();
+            var latlng = lat+','+lng;
+
+            var mapItem = '';
+            if(lat != '' && lng != '')
+            {
+              mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='+latlng+'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'+latlng+'" />';
+            }
+            item +=   '<div class="schedule">' +
+                        '<table>' +
+                          '<colgroup>' +
+                            '<col style="width: 150px;"/>' +
+                            '<col style=""/>' +
+                            '<col style=""/>' +
+                          '</colgroup>' +
+                          '<tbody>' +
+                            '<tr>' +
+                              '<td>Address</td>' +
+                              '<td>:</td>' +
+                              '<td>'+ $("#edit_event_address-"+1).val() +'</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                              '<td>Date & Time</td>' +
+                              '<td>:</td>' +
+                              '<td>'+$("#edit_event_start_date-"+1).val()+' - '+$("#edit_event_end_date-"+1).val()+'</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                              '<td style="vertical-align: top;">Location</td>' +
+                              '<td style="vertical-align: top;">:</td>' +
+                              '<td>' +
+                              mapItem +
+                              '</td>' +
+                            '</tr>' +
+                          '</tbody>' +
+                        '</table>' +
+                     '</div>';
+
+            for(var i = 0; i < saveEschedule.length; i++)
+            {
+              index = saveEschedule[i];
+
+              lat =  markersArray[index][0].getPosition().lat();
+              lng = markersArray[index][0].getPosition().lng();
+              latlng = lat+','+lng;
+
+              mapItem = '';
+              if(lat != '' && lng != '')
+              {
+                mapItem = '<img class="map_img" src="http://maps.googleapis.com/maps/api/staticmap?center='+latlng+'&zoom=15&size=600x300&maptype=roadmap&markers=color:red|'+latlng+'" />';
+              }
+              item +=   '<div class="schedule">' +
+                          '<table>' +
+                            '<colgroup>' +
+                              '<col style="width: 150px;"/>' +
+                              '<col style=""/>' +
+                              '<col style=""/>' +
+                            '</colgroup>' +
+                            '<tbody>' +
+                              '<tr>' +
+                                '<td>Address</td>' +
+                                '<td>:</td>' +
+                                '<td>'+ $("#edit_event_address-"+index).val() +'</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<td>Date & Time</td>' +
+                                '<td>:</td>' +
+                                '<td>'+$("#edit_event_start_date-"+index).val()+' - '+$("#edit_event_end_date-"+index).val()+'</td>' +
+                              '</tr>' +
+                              '<tr>' +
+                                '<td style="vertical-align: top;">Location</td>' +
+                                '<td style="vertical-align: top;">:</td>' +
+                                '<td>' +
+                                mapItem +
+                                '</td>' +
+                              '</tr>' +
+                            '</tbody>' +
+                          '</table>' +
+                       '</div>';
+            }
+            item += '<p class="date">' +
+                        '<span class="button_edit">Edit</span>' +
+                        '<span class="button_delete">Delete</span>' +
+                        data.created_at+
+                      '</p>' +
+                    '</div>';
             $('.div_event').prepend(item);
             $('#edit_event_title').val("");
             $('#edit_event_content').val("");
-            $('#edit_event_address').val("");
-            $('#edit_event_lat').val("");
-            $('#edit_event_lng').val("");
-            $('#edit_event_start_date').val("");
-            $('#edit_event_end_date').val("");
+
+            $('#edit_event_address-1').val("");
+            $('#edit_event_lat-1').val("");
+            $('#edit_event_lng-1').val("");
+            $('#edit_event_start_date-1').val("");
+            $('#edit_event_end_date-1').val("");
+
+            $('.new-eschedule').remove();
+            $('#map-1').empty();
+
+            indexEschedule = 1;
+            saveEschedule = [];
+            countMap = 1;
+            map = [];
+            markersArray = [];
+            countMark = [];
+            geocoder = [];
+
+            initMap(1);
+
             $('#upload_pevent_result').html("");
             $("#upload_pevent").replaceWith($("#upload_pevent").clone(true));
-            clearMap();
-            $('#gmap_helper-'+index).html("Point your marker on map.");
+//            clearMap();
+            $('#gmap_helper-1').html("Point your marker on map.");
             sisaTicketEvent--;
             $("#sisaTicket-event").html(sisaTicketEvent);
           }
+        };
+
+        $.post('{{ action('controller_business@submitAddEvent') }}',
+                {
+                  _token:'{{ csrf_token() }}',
+                  _type:1,
+                  member_id:'{{ $member_id }}',
+                  business_id:'{{ $business->business_id }}',
+                  event_title:$('#edit_event_title').val(),
+                  event_content:$('#edit_event_content').val(),
+                  latLng:latLng,
+                  address:address,
+                  datetime:datetime,
+                  photos:JSON.stringify(photos)
+                },function(data)
+        {
+          callbackSubmitEvent(data);
         });
       });
     });
@@ -422,6 +541,7 @@
     });
 
     function initMap(index,inlat, inlng) {
+    console.log(countMark[index]);
       if(index > 1)
       {
         saveEschedule.push(index);
@@ -484,6 +604,7 @@
     }
 
     function addMarker(index,location) {
+    console.log(countMark[index]);
       if(countMark[index] == 0)
       {
         var x=location.lat();
@@ -493,7 +614,7 @@
           map: map[index],
           draggable:true,
           animation: google.maps.Animation.DROP,
-          title:"Your building location",
+          title:"Your building location"
           //icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|'+warna.substr(1)
         });
         countMark[index]++;
@@ -601,7 +722,7 @@
       function addMoreEschedule()
       {
         indexEschedule++;
-        var item = '<tr>' +
+        var item = '<tr class="new-eschedule" id="new-eschedule-"'+indexEschedule+'>' +
           '<td colspan="3">' +
           '<hr/>' +
             '<table>' +
@@ -1042,11 +1163,11 @@
           @foreach($event->schedule as $schedule)
             <div class="schedule">
               <table>
-                <colgroups>
+                <colgroup>
                   <col style="width: 150px;"/>
                   <col style=""/>
                   <col style=""/>
-                </colgroups>
+                </colgroup>
                 <tbody>
                   <tr>
                     <td>Address</td>

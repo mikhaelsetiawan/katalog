@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Models\model_business_field;
 use App\Models\model_business_claim;
+use App\Models\model_eschedule;
 use App\Models\model_ext_country;
 use App\Models\model_ext_province;
 use App\Models\model_ext_city;
@@ -265,6 +266,19 @@ class controller_business extends Controller {
 				$model_event = new model_event();
 				$model_event->fill($_POST);
 				if ($model_event->save()) {
+					for($i=0; $i<count($_POST['latLng']); $i++)
+					{
+						$model_eschedule = new model_eschedule();
+						$schedule = array();
+						$schedule['event_id'] = $model_event['event_id'];
+						$schedule['eschedule_address'] = $_POST['address'][$i];
+						$schedule['eschedule_lat'] = $_POST['latLng'][$i][0];
+						$schedule['eschedule_lng'] = $_POST['latLng'][$i][1];
+						$schedule['eschedule_start_date'] = $_POST['datetime'][$i][0];
+						$schedule['eschedule_end_date'] = $_POST['datetime'][$i][1];
+						$model_eschedule->fill($schedule);
+						$model_eschedule->save();
+					}
 					$model_bticket->bticket_amount -= 1;
 					$model_bticket->save();
 					$_POST['photos'] = json_decode($_POST['photos'], TRUE);
