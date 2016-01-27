@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use Faker\Provider\DateTime;
 use Illuminate\Database\Eloquent\Model;
 
 class model_event extends Model{
@@ -32,7 +33,7 @@ class model_event extends Model{
 
 	public function schedule()
 	{
-		return $this->hasMany('App\Models\model_eschedule','event_id', 'event_id')->where(array('eschedule_status'=>'1'))->orderBy('created_at',SORT_DESC);
+		return $this->hasMany('App\Models\model_eschedule','event_id', 'event_id');
 	}
 
 	public function business()
@@ -43,5 +44,19 @@ class model_event extends Model{
 	public function member()
 	{
 		return $this->belongsTo('App\Models\model_member','member_id', 'member_id');
+	}
+
+	public function getUpcomingEvent()
+	{
+		$date = new \DateTime();
+		$now = $date->format("Y-m-d H:i:s");
+		$ret = array();
+		$ret = $this->join('eschedule','eschedule.event_id','=','event.event_id')
+								->where('eschedule.eschedule_end_date','>=',$now)
+								->select('event.*')
+								->groupBy('event.event_id')
+								->orderBy('eschedule.eschedule_start_date')
+								->get();
+		return $ret;
 	}
 }

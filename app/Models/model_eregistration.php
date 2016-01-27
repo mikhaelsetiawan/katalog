@@ -27,4 +27,9 @@ class model_eregistration extends Model{
 	{
 		return $this->belongsTo('App\Models\model_member','member_id', 'member_id');
 	}
+
+	public function isRegistered()
+	{
+		return $this->eschedule_id;
+	}
 }

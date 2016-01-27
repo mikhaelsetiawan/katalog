@@ -43,6 +43,12 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('historyOrderTicket', 'controller_member@historyOrderTicket');
 		});
 
+		Route::group(['prefix' => '/event'], function () {
+				Route::get('list', 'controller_event@listEvent');
+				Route::get('detail/{event_id}',['uses' =>'controller_event@detailEvent']);
+				Route::post('updateRegistration','controller_event@updateRegistration');
+		});
+
 		Route::group(['prefix' => '/business'], function () {
 				Route::get('addBusiness','controller_business@addBusiness');
 				Route::get('list','controller_business@listBusiness');

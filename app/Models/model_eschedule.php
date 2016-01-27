@@ -1,6 +1,8 @@
 <?php namespace App\Models;
 
+use Faker\Provider\DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class model_eschedule extends Model{
 	protected $table = 'eschedule';
