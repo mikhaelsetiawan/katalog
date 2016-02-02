@@ -28,6 +28,12 @@ class DatabaseSeeder extends Seeder
 			$this->call(BTicketTableSeeder::class);
 			$this->call(eScheduleTableSeeder::class);
 			$this->call(eRegistrationTableSeeder::class);
+			
+			$this->call(feedbackCategoryTableSeeder::class);
+			$this->call(feedbackTableSeeder::class);
+			$this->call(ratingTableSeeder::class);
+			$this->call(reviewTableSeeder::class);
+			$this->call(reviewRatingTableSeeder::class);
 
     }
 }
@@ -457,6 +463,149 @@ class DatabaseSeeder extends Seeder
 					[
 						'eschedule_id' => '3',
 						'member_id' => '3',
+					],
+				)
+			);
+		}
+	}
+
+	class feedbackCategoryTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('feedback_category')->delete();
+			DB::table('feedback_category')->insert(array(
+					[
+						'fcat_name' => 'Saran'
+					],
+					[
+						'fcat_name' => 'Kritik'
+					],
+				)
+			);
+		}
+	}
+
+	class feedbackTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('feedback')->delete();
+			DB::table('feedback')->insert(array(
+					[
+						'fcat_id' => '1',
+						'member_id' => '1',
+						'feedback_content' => 'Sebaiknya website diubah tampilannya agar juga dapat dibuka dengan baik pada mobile device.'
+					],
+					[
+						'fcat_id' => '2',
+						'member_id' => '2',
+						'feedback_content' => 'Tampilan website masih sangat jelek dan membingungkan.'
+					],
+				)
+			);
+		}
+	}
+
+	class ratingTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('rating')->delete();
+			DB::table('rating')->insert(array(
+					[
+						'rating_name' => 'Pelayanan'
+					],
+					[
+						'rating_name' => 'Rasa'
+					],
+					[
+						'rating_name' => 'Suasana'
+					],
+				)
+			);
+		}
+	}
+
+	class reviewTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('review')->delete();
+			DB::table('review')->insert(array(
+					[
+						'member_id' => '1',
+						'business_id' => '2',
+						'review_content' => 'Rasa makanan enak, tapi suasana dan pelayanannya kurang baik.'
+						
+					],
+					[
+						'member_id' => '2',
+						'business_id' => '3',
+						'review_content' => 'Pelayanan sudah baik, tapi harga makanannya agak mahal.'
+						
+					],
+					[
+						'member_id' => '3',
+						'business_id' => '1',
+						'review_content' => 'Rasa roti panggangnya enak!'
+						
+					],
+				)
+			);
+		}
+	}
+
+	class reviewRatingTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('review_rating')->delete();
+			DB::table('review_rating')->insert(array(
+					[
+						'review_id' => '1',
+						'rating_id' => '1',
+						'rrating_score' => '2'
+					],
+					[
+						'review_id' => '1',
+						'rating_id' => '2',
+						'rrating_score' => '3'
+					],
+					[
+						'review_id' => '1',
+						'rating_id' => '3',
+						'rrating_score' => '4'
+					],
+					[
+						'review_id' => '2',
+						'rating_id' => '1',
+						'rrating_score' => '2'
+					],
+					[
+						'review_id' => '2',
+						'rating_id' => '2',
+						'rrating_score' => '3'
+					],
+					[
+						'review_id' => '2',
+						'rating_id' => '3',
+						'rrating_score' => '4'
+					],
+					[
+						'review_id' => '3',
+						'rating_id' => '1',
+						'rrating_score' => '2'
+					],
+					[
+						'review_id' => '3',
+						'rating_id' => '2',
+						'rrating_score' => '3'
+					],
+					[
+						'review_id' => '3',
+						'rating_id' => '3',
+						'rrating_score' => '4'
 					],
 				)
 			);

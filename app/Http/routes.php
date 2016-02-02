@@ -43,6 +43,12 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('historyOrderTicket', 'controller_member@historyOrderTicket');
 		});
 
+
+		Route::group(['prefix' => '/feedback'], function () {
+				Route::get('index', 'controller_feedback@index');
+				Route::post('submitFeedback', 'controller_feedback@submitFeedback');
+		});
+
 		Route::group(['prefix' => '/event'], function () {
 				Route::get('list', 'controller_event@listEvent');
 				Route::get('detail/{event_id}',['uses' =>'controller_event@detailEvent']);
@@ -106,5 +112,7 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('admin','backend\controller_admin@index');
 				Route::post('editAdmin','backend\controller_admin@editAdmin');
 				Route::post('resetPass','backend\controller_admin@resetPass');
+
+				Route::get('feedback','backend\controller_feedback@index');
 		});
 });

@@ -106,6 +106,11 @@ class model_member extends Model implements AuthenticatableContract, CanResetPas
 		return $this->hasMany('App\Models\model_ticketH','member_id');
 	}
 
+	public function feedback()
+	{
+		return $this->hasMany('App\Models\model_feedback','member_id')->where('feedback_status',1)->orderBy('feedback.created_at',SORT_DESC);
+	}
+
 	public function getAuthPassword() {
 		return $this->member_password;
 	}

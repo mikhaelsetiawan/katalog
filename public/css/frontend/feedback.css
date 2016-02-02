@@ -1,0 +1,33 @@
+.div_feedback
+{
+	margin-top: 50px;
+}
+
+.div_feedback .item
+{
+	margin-top: 5px;
+	border-bottom: 1px solid #cccccc;
+}
+
+.div_feedback .item .title
+{
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.div_feedback .item .date
+{
+	text-align: right;
+	font-size: 11px;
+}
+
+.div_feedback .item .datetime
+{
+}
+
+.div_feedback .item .date .button_delete
+{
+	color: #b11f1f;
+	margin-right: 10px;
+	cursor: pointer;
+}
