@@ -15,6 +15,7 @@ use App\Models\model_photos_category;
 use App\Models\model_photos_news;
 use App\Models\model_photos_event;
 use App\Models\model_bticket;
+use App\Models\model_review;
 use App\Models\model_ticket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
@@ -340,6 +341,41 @@ class controller_business extends Controller {
 			{
 				echo 1;
 			}
+		}
+	}
+
+	public function submitAddReview()
+	{
+		$member_id = auth()->guard('member')->user()->member_id;
+		$model_member = model_member::find($member_id);
+		if($_POST['_type'] == 1)
+		{
+			$model_review = new model_review();
+			$_POST['member_id'] = $member_id;
+			$model_review->fill($_POST);
+			if($model_review->save())
+			{
+				$data = array();
+				$data['review_id'] = $model_review->review_id;
+				$data['member_name'] = $model_member->member_name;
+				$data['created_at'] = date_format(new DateTime($model_review->created_at), 'd-M-Y H:i:s');
+
+				echo json_encode($data);
+			}else
+			{
+				echo 0;
+			}
+
+		}elseif($_POST['_type'] == 3)
+		{
+			//delete
+			$model_review =  model_review::find($_POST['review_id']);
+			$model_review['review_status'] = 0;
+			if($model_review->save())
+			{
+				echo 1;
+			}
+
 		}
 	}
 

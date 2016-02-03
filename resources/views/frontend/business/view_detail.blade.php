@@ -91,6 +91,35 @@
             <div class="cb"></div>
         </div>
     </div>
+
+    <div class="popup-box" id="popup-delete-review">
+        <div class="popup-header"></div>
+        <div class="popup-body">
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+            <input type="hidden" name="_type" id="delete_review_type" value="2" />
+            <input type="hidden" name="business_id" id="delete_review_key" value="" />
+            <div class="form-group">
+                <div class="col-sm-12">
+                    Are you sure wants to delete this review?
+                </div>
+            </div>
+            <div class="popup-buttons" style="margin-top: 30px;">
+                <div class="btn-group fr" onclick="deleteReview()">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <span class="hidden-sm" style="margin-left: 6px;">OK</span>
+                    </button>
+                </div>
+                <div class="btn-group fr" onclick="closePopup()" style="margin-right: 10px;">
+                    <button type="button" class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        <span class="hidden-sm" style="margin-left: 6px;">Cancel</span>
+                    </button>
+                </div>
+            </div>
+            <div class="cb"></div>
+        </div>
+    </div>
     
     <div class="popup-box" id="popup-delete-event">
         <div class="popup-header"></div>
@@ -227,7 +256,7 @@
                           photos +
                           '<p class="date">' +
                             '<span class="button_edit">Edit</span>' +
-                            '<span class="button_delete">Delete</span>' +
+                            '<span class="button_delete" onclick="popupDeleteNews('+data.news_id+')">Delete</span>' +
                             data.created_at+
                           '</p>' +
                         '</div>';
@@ -238,6 +267,35 @@
             $("#upload_pnews").replaceWith($("#upload_pnews").clone(true));
             sisaTicketNews--;
             $("#sisaTicket-news").html(sisaTicketNews);
+          }
+        });
+      });
+
+      $('#button_post_review').click(function()
+      {
+        $.post('{{ action('controller_business@submitAddReview') }}',
+        {
+          _token:'{{ csrf_token() }}',
+          _type:1,
+          business_id: '{{ $business->business_id }}',
+          review_content: $('#add_review_content').val()
+        },function(data) {
+          if(data == 0)
+          {
+            alert("Post review failed.");
+          }else{
+            data = $.parseJSON(data);
+            var item = '<div class="item" id="review_'+data.review_id+'">' +
+                          '<p class="title">'+data.member_name+'</p>' +
+                          '<p class="content">'+$('#add_review_content').val()+'</p>' +
+                          '<p class="date">' +
+                            '<span class="button_edit">Edit</span>' +
+                            '<span class="button_delete" onclick="popupDeleteReview('+data.review_id+')">Delete</span>' +
+                            data.created_at+
+                          '</p>' +
+                        '</div>';
+            $('.div_review').prepend(item);
+            $('#add_review_content').val("");
           }
         });
       });
@@ -403,7 +461,7 @@
             }
             item += '<p class="date">' +
                         '<span class="button_edit">Edit</span>' +
-                        '<span class="button_delete">Delete</span>' +
+                        '<span class="button_delete"  onclick="popupDeleteEvent('+data.event_id+')">Delete</span>' +
                         data.created_at+
                       '</p>' +
                     '</div>';
@@ -489,6 +547,31 @@
           {
             $('#news_'+$('#delete_news_key').val()).remove();
             $('#delete_news_key').val("");
+            closePopup();
+          }
+        });
+		}
+
+		function popupDeleteReview(key)
+		{
+		    $('.popup-header').html('Form Delete Data');
+		    $("#delete_review_key").val(key);
+		    openPopup("popup-delete-review");
+		}
+
+		function deleteReview()
+		{
+        $.post('{{ action('controller_business@submitAddReview') }}',
+                {
+                  _token:'{{ csrf_token() }}',
+                  _type:3,
+                  review_id: $('#delete_review_key').val()
+                },function(data)
+        {
+          if(data == 1)
+          {
+            $('#review_'+$('#delete_review_key').val()).remove();
+            $('#delete_review_key').val("");
             closePopup();
           }
         });
@@ -981,6 +1064,49 @@
 
 <div class="row">
   <div class="col-md-10 col-md-offset-1" style="margin-bottom: 50px;">
+    <h3>Review Me!</h3>
+
+    <table id="table_addNews" style="width:100%;" class="">
+      <colgroup>
+        <col style="width: 150px;"/>
+        <col style="width: 10px;"/>
+        <col style=""/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td colspan="3">
+            {!! Form::textarea('review_content', null, [
+                            'id'    => 'add_review_content',
+                            'class' => 'form-control',
+                            'placeholder' => 'Say something..',
+                            'style' => 'resize:vertical;',
+                            'rows' => 2,
+                            'cols' => 40
+                            ]) !!}
+            <button type="button" id="button_post_review" class="btn btn-success fr">Publish</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="div_review">
+      @foreach($business->review as $review)
+        <div class="item" id="review_{!! $review->review_id !!}">
+          <p class="title">{!! $review->member->member_name !!}</p>
+          <p class="content">{!! $review->review_content !!}</p>
+          <p class="date">
+            {{--<span class="button_edit">Edit</span>--}}
+            <span class="button_delete" onclick="popupDeleteReview({!! $review->review_id !!})">Delete</span>
+            {!! date_format(new DateTime($review->created_at), 'd-M-Y H:i:s') !!}
+          </p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1" style="margin-bottom: 50px;">
     <h3>News (sisa tiket : <span id="sisaTicket-news">{{ $sisaticket[1] }}</span>)</h3>
 
     @if($isOwner > 0)
@@ -990,46 +1116,48 @@
           <col style="width: 10px;"/>
           <col style=""/>
         </colgroup>
-        <tr>
-          <td>Title</td>
-          <td>:</td>
-          <td>
-            {!! Form::input('text','news_title',null, [
-                            'id'    => 'edit_news_title',
-                            'class' => 'form-control',
-                            'placeholder' => 'Title'
-                            ]) !!}
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">Content</td>
-          <td style="vertical-align: top;">:</td>
-          <td>
-            {!! Form::textarea('news_content', null, [
-                            'id'    => 'edit_news_content',
-                            'class' => 'form-control',
-                            'placeholder' => 'Content',
-                            'style' => 'resize:vertical;',
-                            'rows' => 2,
-                            'cols' => 40
+        <tbody>
+          <tr>
+            <td>Title</td>
+            <td>:</td>
+            <td>
+              {!! Form::input('text','news_title',null, [
+                              'id'    => 'edit_news_title',
+                              'class' => 'form-control',
+                              'placeholder' => 'Title'
                               ]) !!}
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">Upload</td>
-          <td style="vertical-align: top;">:</td>
-          <td>
-            <input type="hidden" name="count_images_pnews" id="count_images_pnews" value="1" />
-            <div id="upload_pnews_result"></div>
-            <input id="upload_pnews" name="upload[]" type="file" onchange="loadImageFile(this,1,'pnews')"/>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td>
-            <button type="button" id="button_post_news" class="btn btn-success fr">Post</button>
-          </td>
-        </tr>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">Content</td>
+            <td style="vertical-align: top;">:</td>
+            <td>
+              {!! Form::textarea('news_content', null, [
+                              'id'    => 'edit_news_content',
+                              'class' => 'form-control',
+                              'placeholder' => 'Content',
+                              'style' => 'resize:vertical;',
+                              'rows' => 2,
+                              'cols' => 40
+                                ]) !!}
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">Upload</td>
+            <td style="vertical-align: top;">:</td>
+            <td>
+              <input type="hidden" name="count_images_pnews" id="count_images_pnews" value="1" />
+              <div id="upload_pnews_result"></div>
+              <input id="upload_pnews" name="upload[]" type="file" onchange="loadImageFile(this,1,'pnews')"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td>
+              <button type="button" id="button_post_news" class="btn btn-success fr">Post</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     @endif
     <div class="div_news">
@@ -1067,105 +1195,107 @@
           <col style="width: 10px;"/>
           <col style=""/>
         </colgroup>
-        <tr>
-          <td>Title</td>
-          <td>:</td>
-          <td>
-            {!! Form::input('text','event_title',null, [
-                            'id'    => 'edit_event_title',
-                            'class' => 'form-control',
-                            'placeholder' => 'Title'
-                            ]) !!}
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">Content</td>
-          <td style="vertical-align: top;">:</td>
-          <td>
-            {!! Form::textarea('event_content', null, [
-                            'id'    => 'edit_event_content',
-                            'class' => 'form-control',
-                            'placeholder' => 'Content',
-                            'style' => 'resize:vertical;',
-                            'rows' => 2,
-                            'cols' => 40
+        <tbody>
+          <tr>
+            <td>Title</td>
+            <td>:</td>
+            <td>
+              {!! Form::input('text','event_title',null, [
+                              'id'    => 'edit_event_title',
+                              'class' => 'form-control',
+                              'placeholder' => 'Title'
                               ]) !!}
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">Upload</td>
-          <td style="vertical-align: top;">:</td>
-          <td>
-            <input type="hidden" name="count_images_pevent" id="count_images_pevent" value="1" />
-            <div id="upload_pevent_result"></div>
-            <input id="upload_pevent" name="upload[]" type="file" onchange="loadImageFile(this,1,'pevent')"/>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3">
-          <hr/>
-            <table style="width:100%">
-              <colgroup>
-                <col style="width: 150px;"/>
-                <col style="width: 10px;"/>
-                <col style=""/>
-              </colgroup>
-              <tbody>
-                <tr>
-                  <td>Event date</td>
-                  <td>:</td>
-                  <td>
-                    {!! Form::input('text','event_start_date',null, [
-                                    'id'    => 'edit_event_start_date-1',
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Start date',
-                                    'style'=>'width:200px;display:inline;'
-                                    ]) !!} -
-                    {!! Form::input('text','event_end_date',null, [
-                                    'id'    => 'edit_event_end_date-1',
-                                    'class' => 'form-control',
-                                    'placeholder' => 'End date',
-                                    'style'=>'width:200px;display:inline;'
-                                    ]) !!}
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">Address</td>
-                  <td style="vertical-align: top;">:</td>
-                  <td>
-                    {!! Form::input('text','event_address',null, [
-                                    'id'    => 'edit_event_address-1',
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Address',
-                                    'style'=>'width:411px;'
-                                    ]) !!}
-                              <button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">Point your location</td>
-                  <td style="vertical-align: top;">:</td>
-                  <td>
-                    <input type="hidden" name="event_lat" id="edit_event_lat-1" />
-                    <input type="hidden" name="event_lng" id="edit_event_lng-1" />
-                    <span class="control-label" id="gmap_helper-1">Point your marker on map.</span>
-                    <div id="map-1" class="map"></div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-        <tr id="tr-post-event">
-          <td colspan="2"></td>
-          <td>
-            <button type="button" id="button_post_event" style="margin-left:5px;" class="btn btn-success btn-sm pull-right">Post</button>
-            <button class="btn btn-primary btn-sm pull-right" type="button" onclick="addMoreEschedule()">
-              <span class="glyphicon glyphicon-plus"></span>
-              <span class="hidden-sm" style="margin-left: 6px;">Add More Schedule</span>
-            </button>
-          </td>
-        </tr>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">Content</td>
+            <td style="vertical-align: top;">:</td>
+            <td>
+              {!! Form::textarea('event_content', null, [
+                              'id'    => 'edit_event_content',
+                              'class' => 'form-control',
+                              'placeholder' => 'Content',
+                              'style' => 'resize:vertical;',
+                              'rows' => 2,
+                              'cols' => 40
+                                ]) !!}
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">Upload</td>
+            <td style="vertical-align: top;">:</td>
+            <td>
+              <input type="hidden" name="count_images_pevent" id="count_images_pevent" value="1" />
+              <div id="upload_pevent_result"></div>
+              <input id="upload_pevent" name="upload[]" type="file" onchange="loadImageFile(this,1,'pevent')"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+            <hr/>
+              <table style="width:100%">
+                <colgroup>
+                  <col style="width: 150px;"/>
+                  <col style="width: 10px;"/>
+                  <col style=""/>
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <td>Event date</td>
+                    <td>:</td>
+                    <td>
+                      {!! Form::input('text','event_start_date',null, [
+                                      'id'    => 'edit_event_start_date-1',
+                                      'class' => 'form-control',
+                                      'placeholder' => 'Start date',
+                                      'style'=>'width:200px;display:inline;'
+                                      ]) !!} -
+                      {!! Form::input('text','event_end_date',null, [
+                                      'id'    => 'edit_event_end_date-1',
+                                      'class' => 'form-control',
+                                      'placeholder' => 'End date',
+                                      'style'=>'width:200px;display:inline;'
+                                      ]) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: top;">Address</td>
+                    <td style="vertical-align: top;">:</td>
+                    <td>
+                      {!! Form::input('text','event_address',null, [
+                                      'id'    => 'edit_event_address-1',
+                                      'class' => 'form-control',
+                                      'placeholder' => 'Address',
+                                      'style'=>'width:411px;'
+                                      ]) !!}
+                                <button type="button" class="btn btn-success btn-sm" onclick="codeAddress(1)">Point it at maps.</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: top;">Point your location</td>
+                    <td style="vertical-align: top;">:</td>
+                    <td>
+                      <input type="hidden" name="event_lat" id="edit_event_lat-1" />
+                      <input type="hidden" name="event_lng" id="edit_event_lng-1" />
+                      <span class="control-label" id="gmap_helper-1">Point your marker on map.</span>
+                      <div id="map-1" class="map"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr id="tr-post-event">
+            <td colspan="2"></td>
+            <td>
+              <button type="button" id="button_post_event" style="margin-left:5px;" class="btn btn-success btn-sm pull-right">Post</button>
+              <button class="btn btn-primary btn-sm pull-right" type="button" onclick="addMoreEschedule()">
+                <span class="glyphicon glyphicon-plus"></span>
+                <span class="hidden-sm" style="margin-left: 6px;">Add More Schedule</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     @endif
     <div class="div_event">

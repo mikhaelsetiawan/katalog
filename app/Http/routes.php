@@ -63,6 +63,7 @@ Route::group(['middleware' => ['web']], function () {
 				Route::post('submitAddBusiness','controller_business@submitAddBusiness');
 				Route::post('submitAddNews','controller_business@submitAddNews');
 				Route::post('submitAddEvent','controller_business@submitAddEvent');
+				Route::post('submitAddReview','controller_business@submitAddReview');
 				Route::post('addNewBfield','controller_business@addNewBfield');
 				Route::post('addPcat','controller_business@addPcat');
 				Route::post('addPBusiness','controller_business@addPBusiness');

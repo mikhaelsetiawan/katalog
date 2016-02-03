@@ -1,3 +1,4 @@
+/*region news */
 .div_news
 {
 	margin-top: 50px;
@@ -44,7 +45,9 @@
 	margin-right: 10px;
 	cursor: pointer;
 }
+/*endregion*/
 
+/*region event */
 .div_event
 {
 	margin-top: 50px;
@@ -122,3 +125,47 @@
 	margin-bottom: 5px;
 	float: left;
 }
+/*endregion*/
+
+/*region review */
+.div_review
+{
+	margin-top: 50px;
+}
+
+.div_review .item
+{
+	margin-top: 5px;
+	border-bottom: 1px solid #cccccc;
+}
+
+.div_review .item .title
+{
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.div_review .item .date
+{
+	text-align: right;
+	font-size: 11px;
+}
+
+.div_review .item .datetime
+{
+}
+
+.div_review .item .date .button_edit
+{
+	color: #0259C4;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.div_review .item .date .button_delete
+{
+	color: #b11f1f;
+	margin-right: 10px;
+	cursor: pointer;
+}
+/*endregion*/
