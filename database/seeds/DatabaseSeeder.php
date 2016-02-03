@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 			$this->call(CityTableSeeder::class);
 			$this->call(MemberTableSeeder::class);
 			$this->call(BuildingTableSeeder::class);
+			$this->call(ratingTableSeeder::class);
 			$this->call(BusinessfieldTableSeeder::class);
 			$this->call(BusinessTableSeeder::class);
 			$this->call(MemberaffTableSeeder::class);
@@ -31,7 +32,6 @@ class DatabaseSeeder extends Seeder
 			
 			$this->call(feedbackCategoryTableSeeder::class);
 			$this->call(feedbackTableSeeder::class);
-			$this->call(ratingTableSeeder::class);
 			$this->call(reviewTableSeeder::class);
 			$this->call(reviewRatingTableSeeder::class);
 
@@ -149,14 +149,17 @@ class DatabaseSeeder extends Seeder
 					[
 						'bfield_name'=>'Business Field 1',
 						'bfield_parent'=>'0',
+						'bfield_rating'=>'1,2'
 					],
 					[
 						'bfield_name'=>'Business Field 2',
 						'bfield_parent'=>'1',
+						'bfield_rating'=>'2,3'
 					],
 					[
 						'bfield_name'=>'Business Field 3',
 						'bfield_parent'=>'1',
+						'bfield_rating'=>'1,3'
 					],
 				));
 		}

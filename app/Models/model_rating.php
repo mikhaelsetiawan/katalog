@@ -6,7 +6,7 @@ class model_rating extends Model{
 	protected $table = 'rating';
 	protected $primaryKey = 'rating_id';
 	protected $fillable = [
-		rating_name
+		'rating_name'
 	];
 
 	public function init() {

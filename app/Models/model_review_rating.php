@@ -6,9 +6,9 @@ class model_review_rating extends Model{
 	protected $table = 'review_rating';
 	protected $primaryKey = 'rrating_id';
 	protected $fillable = [
-		review_id,
-		rating_id,
-		rrating_score
+		'review_id',
+		'rating_id',
+		'rrating_score'
 	];
 
 	public function init() {

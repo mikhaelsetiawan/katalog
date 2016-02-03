@@ -16,6 +16,7 @@ class CreateModelBusinessField extends Migration
             $table->increments('bfield_id');
 						$table->string('bfield_name',255);
 						$table->integer('bfield_parent');
+						$table->string('bfield_rating',255);
 						$table->tinyInteger('bfield_status')->default(1);
             $table->timestamps();
         });

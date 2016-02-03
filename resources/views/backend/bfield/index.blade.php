@@ -33,8 +33,18 @@
                   </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="bfield_parent">Rating : </label>
+                    <div class="col-md-10">
+                      {!! Form::select('', $model_rating, null, ['class' => 'form-control', 'id'=>'select_rating_category']) !!}
+                      <input name="bfield_rating" type="hidden" id="rating_category"/>
+                      <input class="btn-xs btn btn-primary" type="button" value="Add Rating Category" id="btn_add_category">
+                      <div id="div_rating_category"></div>
+                    </div>
+                </div>
+
                 <div class="popup-buttons">
-                    <div class="btn-group fr" onclick="$('#form-popup-edit').submit()">
+                    <div class="btn-group fr" onclick="submitForm()">
                         <button type="submit" class="btn btn-success btn-sm">
                             <span class="glyphicon glyphicon-ok"></span>
                             <span class="hidden-sm" style="margin-left: 6px;">Submit</span>
@@ -104,17 +114,35 @@
 					<th style="width: 115px;">Action</th>
 					<th>Name</th>
 					<th>Parent</th>
+					<th>Rating</th>
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($model_bfield as $bfield)
+				  <?php
+				    $ratingName = '';
+				    $ratingId = '';
+				    $ratings = $bfield->rating();
+				    for($i = 0; $i < count($ratings); $i++)
+				    {
+				      $ratingName .= $ratings[$i]->rating_name;
+				      $ratingId .= $ratings[$i]->rating_id;
+				      if($i < (count($ratings) - 1) )
+				      {
+				        $ratingName .= ',';
+				        $ratingId .= ',';
+				      }
+				    }
+          ?>
 					<tr>
             <td>
               <div class="btn-group" onclick='
                   popupEdit(
                   "{{{ $bfield['bfield_id'] }}}",
                   "{{{ $bfield['bfield_name'] }}}",
-                  "{{{ $bfield['bfield_parent'] }}}"
+                  "{{{ $bfield['bfield_parent'] }}}",
+                  "<?= $ratingId ?>",
+                  "<?= $ratingName ?>"
                   )'>
                   <button type="button" class="btn btn-primary btn-xs">
                       <span class="glyphicon glyphicon-edit"></span>
@@ -130,6 +158,7 @@
             </td>
 						<td>{!! $bfield['bfield_name'] !!}</td>
 						<td>{!! $bfield->parentName() !!}</td>
+						<td><?= $ratingName ?></td>
 					</tr>
 				@endforeach
 			</tbody>
@@ -149,8 +178,30 @@
 	<script type="text/javascript">
 		//var editor; // use a global for the submit and return data rendering in the examples
         var $model_bfield = JSON.parse( '{!! (json_encode($model_bfield)) !!}' );
-
+        var ratingId = [];
+        var ratingName = [];
 		$(document).ready(function() {
+		    $('#btn_add_category').click(function()
+		    {
+		      var selectedRating = $("#select_rating_category").val();
+		      var selectedRatingText = $("#select_rating_category option:selected").text();
+		      if($.inArray(selectedRating,ratingId) == -1)
+		      {
+		        //not found
+		        ratingId.push(selectedRating);
+		        ratingName.push(selectedRatingText);
+
+		        var ratingString = '<button type="button" class="btn btn-danger btn-xs" style="margin-top: 5px;margin-right:5px;" id="rating_category_'+selectedRating+'" onclick="removeRatingCategory('+selectedRating+')">' +
+		                        '<span class="hidden-sm" style="margin-left: 6px;margin-right: 6px;">'+selectedRatingText+'</span>' +
+		                        '<span class="glyphicon glyphicon-remove"></span>' +
+		                      '</button>';
+		        $("#div_rating_category").append(ratingString);
+		      }else
+		      {
+		        alert("Already added!");
+		      }
+		    });
+
 		    $("#table_bfield").dataTable(
 		        {
                 "bAutoWidth":false,
@@ -162,13 +213,49 @@
             );
 		} );
 
-		function popupEdit(id,name,parent)
+    function submitForm()
+    {
+      $("#rating_category").val(ratingId.join(","));
+      $('#form-popup-edit').submit();
+    }
+
+    function removeRatingCategory(id)
+    {
+      var index = '';
+      for(var i = 0; i < ratingId.length; i++)
+      {
+        if(ratingId[i] == id)
+        {
+          index = i;
+          break;
+        }
+      }
+      ratingId.splice(index,1);
+      ratingName.splice(index,1);
+      $("#div_rating_category #rating_category_"+id).remove();
+    }
+
+		function popupEdit(id,name,parent,inputRatingId,inputRatingName)
 		{
 		    $('.popup-header').html('Form Edit Data');
 		    $("#_type").val('2');
 		    $("#edit_bfield_id").val(id);
 		    $("#edit_bfield_name").val(name);
 		    $("#edit_bfield_parent").val(parent);
+
+		    ratingId = inputRatingId.split(",");
+		    ratingName = inputRatingName.split(",");
+
+		    var ratingString = '';
+		    for(var i=0; i < ratingId.length; i++)
+		    {
+		      ratingString += '<button type="button" class="btn btn-danger btn-xs" style="margin-top: 5px;margin-right:5px;" id="rating_category_'+ratingId[i]+'" onclick="removeRatingCategory('+ratingId[i]+')">' +
+		                        '<span class="hidden-sm" style="margin-left: 6px;margin-right: 6px;">'+ratingName[i]+'</span>' +
+		                        '<span class="glyphicon glyphicon-remove"></span>' +
+		                      '</button>';
+		    }
+		    $("#div_rating_category").html('');
+		    $("#div_rating_category").append(ratingString);
 		    openPopup("popup-edit");
 		}
 

@@ -16,6 +16,7 @@ use App\Models\model_photos_news;
 use App\Models\model_photos_event;
 use App\Models\model_bticket;
 use App\Models\model_review;
+use App\Models\model_review_rating;
 use App\Models\model_ticket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
@@ -45,6 +46,7 @@ class controller_business extends Controller {
 	{
 		$member_id = auth()->guard('member')->user()->member_id;
 		$model_business = model_business::find($business_id);
+		$model_review = model_review::where(['member_id'=>$member_id,'business_id'=>$business_id,'review_status'=>1])->orderBy('review_id',SORT_DESC)->first();
 		$model_claim = model_business_claim::where(['business_id'=>$business_id,'member_id'=>$member_id,'bclaim_status'=>'1'])->get();
 		$model_maff = model_member_affiliation::where(['business_id'=>$business_id,'member_id'=>$member_id,'maff_status'=>'1'])->get();
 		$model_pcat = model_photos_category::where(['business_id'=>$business_id,'pcat_status'=>1])->pluck('pcat_name','pcat_id')->toArray();
@@ -64,6 +66,7 @@ class controller_business extends Controller {
 			'pcat' => $model_pcat,
 			'pbusiness' => $model_pbusiness,
 			'sisaticket' => $sisaticket,
+			'model_review' => $model_review
 		]);
 	}
 
@@ -356,7 +359,52 @@ class controller_business extends Controller {
 			if($model_review->save())
 			{
 				$data = array();
-				$data['review_id'] = $model_review->review_id;
+				$reviewId = $model_review->review_id;
+				foreach ($_POST['rating'] as $key => $value)
+				{
+					$model_review_rating = new model_review_rating();
+					$dataRating = array();
+					$dataRating['review_id'] = $reviewId;
+					$dataRating['rating_id'] = $key;
+					$dataRating['rrating_score'] = $value;
+					$model_review_rating->fill($dataRating);
+					if($model_review_rating->save())
+					{
+						$dataRating['rating_name'] = $model_review_rating->rating->rating_name;
+					}
+					$data['rating'][] = $dataRating;
+				}
+				$data['review_id'] = $reviewId;
+				$data['member_name'] = $model_member->member_name;
+				$data['created_at'] = date_format(new DateTime($model_review->created_at), 'd-M-Y H:i:s');
+
+				echo json_encode($data);
+			}else
+			{
+				echo 0;
+			}
+
+		}elseif($_POST['_type'] == 2)
+		{
+			$model_review = model_review::find($_POST['review_id']);
+			$model_review->fill($_POST);
+			if($model_review->save())
+			{
+				$data = array();
+				$reviewId = $model_review->review_id;
+				foreach ($_POST['rating'] as $key => $value)
+				{
+					$model_review_rating = model_review_rating::where(['review_id'=>$reviewId,'rating_id'=>$key])->firstOrFail();
+					$dataRating = array();
+					$dataRating['rrating_score'] = $value;
+					$model_review_rating->fill($dataRating);
+					if($model_review_rating->save())
+					{
+						$dataRating['rating_name'] = $model_review_rating->rating->rating_name;
+					}
+					$data['rating'][] = $dataRating;
+				}
+				$data['review_id'] = $reviewId;
 				$data['member_name'] = $model_member->member_name;
 				$data['created_at'] = date_format(new DateTime($model_review->created_at), 'd-M-Y H:i:s');
 

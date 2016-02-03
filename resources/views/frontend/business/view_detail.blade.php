@@ -166,6 +166,7 @@
 	  {!! Html::script('js/massimgcompress.js'); !!}
 
   <script>
+//    var ratingId = new Array();
     var sisaTicketNews = parseInt('{{ $sisaticket[1] }}');
     var sisaTicketEvent = parseInt('{{ $sisaticket[2] }}');
     $(document).ready(function()
@@ -267,35 +268,6 @@
             $("#upload_pnews").replaceWith($("#upload_pnews").clone(true));
             sisaTicketNews--;
             $("#sisaTicket-news").html(sisaTicketNews);
-          }
-        });
-      });
-
-      $('#button_post_review').click(function()
-      {
-        $.post('{{ action('controller_business@submitAddReview') }}',
-        {
-          _token:'{{ csrf_token() }}',
-          _type:1,
-          business_id: '{{ $business->business_id }}',
-          review_content: $('#add_review_content').val()
-        },function(data) {
-          if(data == 0)
-          {
-            alert("Post review failed.");
-          }else{
-            data = $.parseJSON(data);
-            var item = '<div class="item" id="review_'+data.review_id+'">' +
-                          '<p class="title">'+data.member_name+'</p>' +
-                          '<p class="content">'+$('#add_review_content').val()+'</p>' +
-                          '<p class="date">' +
-                            '<span class="button_edit">Edit</span>' +
-                            '<span class="button_delete" onclick="popupDeleteReview('+data.review_id+')">Delete</span>' +
-                            data.created_at+
-                          '</p>' +
-                        '</div>';
-            $('.div_review').prepend(item);
-            $('#add_review_content').val("");
           }
         });
       });
@@ -607,6 +579,68 @@
           }
         });
 		}
+
+		function editReview()
+		{
+      $("#table_addReview").show();
+		}
+
+    function postReview(type,review_id)
+    {
+      var rating = {};
+
+      for(var i = 0; i < ratingId.length; i++)
+      {
+        rating[ratingId[i]+""] = $("#rating_"+ratingId[i]).val();
+      }
+
+      $.post('{{ action('controller_business@submitAddReview') }}',
+      {
+        _token:'{{ csrf_token() }}',
+        _type:type,
+        review_id:review_id,
+        business_id: '{{ $business->business_id }}',
+        review_content: $('#add_review_content').val(),
+        rating: rating
+      },function(data) {
+        if(data == 0)
+        {
+          alert("Post review failed.");
+        }else{
+          data = $.parseJSON(data);
+          var ratingString = '';
+          if(data.rating.length > 0)
+          {
+            ratingString += '<div class="rating">';
+            for(var j = 0; j < data.rating.length; j++)
+            {
+              ratingString += '<p>'+data.rating[j].rating_name+' : '+data.rating[j].rrating_score+'</p>';
+            }
+            ratingString += '</div>';
+          }
+
+          if(type == 2)
+          {
+            $('.div_review #review_'+data.review_id).remove();
+          }
+
+          var item = '<div class="item" id="review_'+data.review_id+'">' +
+                        '<p class="title">'+data.member_name+'</p>' +
+                        ratingString +
+                        '<p class="content">'+$('#add_review_content').val()+'</p>' +
+                        '<p class="date">' +
+                          '<span class="button_edit" onclick="editReview()">Edit</span>' +
+                          '<span class="button_delete" onclick="popupDeleteReview('+data.review_id+')">Delete</span>' +
+                          data.created_at+
+                        '</p>' +
+                      '</div>';
+          $('.div_review').prepend(item);
+
+          $("#button_post_review").attr("onclick","postReview(2,"+data.review_id+")");
+          $("#table_addReview").hide();
+        }
+      });
+    }
   </script>
 
 
@@ -620,7 +654,9 @@
     var geocoder = [];
 
     $(window).load(function(){
+      <?php if($isOwner > 0){ ?>
         initMap(1);
+      <?php } ?>
     });
 
     function initMap(index,inlat, inlng) {
@@ -1065,17 +1101,49 @@
 <div class="row">
   <div class="col-md-10 col-md-offset-1" style="margin-bottom: 50px;">
     <h3>Review Me!</h3>
-
-    <table id="table_addNews" style="width:100%;" class="">
+    <?php
+      $styleTable = '';
+      $reviewContent = '';
+      $eventOnClick = '';
+      if(is_null($model_review))
+      {
+        $styleTable = 'style="width:100%;"';
+        $eventOnClick = 'postReview(1)';
+      }else{
+        $styleTable = 'style="width:100%;display:none;"';
+        $reviewContent = $model_review->review_content;
+        $eventOnClick = 'postReview(2,'.$model_review->review_id.')';
+      }
+    ?>
+    <table id="table_addReview" <?= $styleTable ?> class="">
       <colgroup>
         <col style="width: 150px;"/>
         <col style="width: 10px;"/>
         <col style=""/>
       </colgroup>
       <tbody>
+        <script>ratingId = new Array();</script>
+        @foreach($business->bfield->rating() as $rating)
+        <script>ratingId.push({{ $rating->rating_id  }});</script>
+        <tr>
+        	<td>{{ $rating->rating_name }}</td>
+        	<td>:</td>
+        	<td>
+        	  <?php
+        	    $ratingScore = $model_review->rating->where('rating_id',$rating->rating_id)->first();
+              if(is_null($ratingScore))
+              {
+            ?>
+        	    <input value="" class="form-control" min="1" max="10" type="number" name="{{ $rating->rating_id }}" id="rating_{{ $rating->rating_id }}"/>
+            <?php }else{ ?>
+        	    <input type="number" class="form-control" min="1" max="10" name="{{ $rating->rating_id }}" id="rating_{{ $rating->rating_id }}" value="{{$ratingScore->rrating_score}}"/>
+            <?php } ?>
+        	</td>
+        </tr>
+        @endforeach
         <tr>
           <td colspan="3">
-            {!! Form::textarea('review_content', null, [
+            {!! Form::textarea('review_content', $reviewContent, [
                             'id'    => 'add_review_content',
                             'class' => 'form-control',
                             'placeholder' => 'Say something..',
@@ -1083,15 +1151,41 @@
                             'rows' => 2,
                             'cols' => 40
                             ]) !!}
-            <button type="button" id="button_post_review" class="btn btn-success fr">Publish</button>
+            <button type="button" id="button_post_review" class="btn btn-success fr" onclick="<?= $eventOnClick ?>">Publish</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="div_review">
+      <?php $business->setExcludeReviewMemberId($member_id); ?>
+      @if($model_review != '')
+      <div class="item" id="review_{!! $model_review->review_id !!}">
+        <p class="title">{!! $model_review->member->member_name !!}</p>
+        @if(count($model_review->rating)>0)
+          <div class="rating">
+            @foreach($model_review->rating as $rating)
+            <p><?= $rating->rating->rating_name ?> : <?= $rating->rrating_score ?></p>
+            @endforeach
+          </div>
+        @endif
+        <p class="content">{!! $model_review->review_content !!}</p>
+        <p class="date">
+          <span class="button_edit" onclick="editReview()">Edit</span>
+          <span class="button_delete" onclick="popupDeleteReview({!! $model_review->review_id !!})">Delete</span>
+          {!! date_format(new DateTime($model_review->created_at), 'd-M-Y H:i:s') !!}
+        </p>
+      </div>
+      @endif
       @foreach($business->review as $review)
         <div class="item" id="review_{!! $review->review_id !!}">
           <p class="title">{!! $review->member->member_name !!}</p>
+          @if(count($review->rating)>0)
+            <div class="rating">
+              @foreach($review->rating as $rating)
+              <p><?= $rating->rating->rating_name ?> : <?= $rating->rrating_score ?></p>
+              @endforeach
+            </div>
+          @endif
           <p class="content">{!! $review->review_content !!}</p>
           <p class="date">
             {{--<span class="button_edit">Edit</span>--}}

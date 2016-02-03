@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\model_business_field;
 use App\Models\model_business;
 
+use App\Models\model_rating;
 use Illuminate\Http\Request;
 
 class controller_bfield extends Controller {
@@ -16,12 +17,14 @@ class controller_bfield extends Controller {
 
 	public function index()
 	{
+		$model_rating = model_rating::where('rating_status','1')->pluck('rating_name','rating_id')->toArray();
 		$model_bfield = model_business_field::where(array('bfield_status'=>'1'))->get();
 		$model_bfield_parent = model_business_field::where('bfield_status','1')->orderBy('bfield_name')->pluck('bfield_name','bfield_id')->toArray();
 		$model_bfield_parent = ['0'=>'No Parent'] + $model_bfield_parent;
 		return view('backend.bfield.index')->with([
 				'model_bfield' => $model_bfield,
 				'model_bfield_parent' => $model_bfield_parent,
+				'model_rating' => $model_rating
 			]);
 	}
 

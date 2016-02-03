@@ -14,6 +14,7 @@ class model_business extends Model{
 		'business_parent',
 		'business_status',
 	];
+	protected $excludeReviewMemberId = '';
 
 	public function init() {
 
@@ -21,6 +22,11 @@ class model_business extends Model{
 
 	public function fields() {
 
+	}
+
+	public function setExcludeReviewMemberId($member_id)
+	{
+		$this->excludeReviewMemberId = $member_id;
 	}
 
 	public function building()
@@ -53,9 +59,15 @@ class model_business extends Model{
 		return $this->hasMany('App\Models\model_event','business_id', 'business_id')->where(array('event_status'=>'1'))->orderBy('created_at',SORT_DESC);
 	}
 
-	public function review()
+	public function review($excludeMember = "")
 	{
-		return $this->hasMany('App\Models\model_review','business_id', 'business_id')->where('review_status',1)->orderBy('review.created_at',SORT_DESC);
+		if($this->excludeReviewMemberId != "")
+		{
+			return $this->hasMany('App\Models\model_review','business_id', 'business_id')->where('review_status',1)->where('member_id','!=',$this->excludeReviewMemberId)->orderBy('review.created_at',SORT_DESC);
+		}else{
+			return $this->hasMany('App\Models\model_review','business_id', 'business_id')->where('review_status',1)->orderBy('review.created_at',SORT_DESC);
+		}
+
 	}
 
 	public function parentName()

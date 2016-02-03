@@ -9,6 +9,7 @@ class model_business_field extends Model{
 	protected $fillable = [
 		'bfield_name',
 		'bfield_parent',
+		'bfield_rating'
 	];
 
 	public function init() {
@@ -28,5 +29,16 @@ class model_business_field extends Model{
 	{
 		$model_business_field = model_business_field::find($this->bfield_parent);
 		return $model_business_field['bfield_name'];
+	}
+
+	public function rating()
+	{
+		$split1 = explode(",",$this->bfield_rating);
+		$data = array();
+		foreach($split1 as $rating_id)
+		{
+			$data[] = model_rating::find($rating_id);
+		}
+		return $data;
 	}
 }
