@@ -1,4 +1,4 @@
-@extends('app')
+@extends('frontend/view_frontend_index')
 
 @section('popup')
 <div class="popup-overlay">
@@ -78,7 +78,6 @@
               {
                 _token:'{{ csrf_token() }}',
                 _type:1,
-                member_id:'{{ $member_id }}',
                 fcat_id:$('#add_fcat_id').val(),
                 feedback_content:$('#add_feedback_content').val()
               },function(data)

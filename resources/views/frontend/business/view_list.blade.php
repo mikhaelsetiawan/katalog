@@ -1,4 +1,4 @@
-@extends('backend')
+@extends('frontend/view_frontend_index')
 
 @section('popup')
 @endsection

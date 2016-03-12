@@ -43,9 +43,12 @@ Route::group(['middleware' => ['web']], function () {
 				Route::get('historyOrderTicket', 'controller_member@historyOrderTicket');
 		});
 
+		Route::group(['prefix' => '/report'], function () {
+				Route::post('submitReport', 'controller_report@submitReport');
+		});
 
 		Route::group(['prefix' => '/feedback'], function () {
-				Route::get('index', 'controller_feedback@index');
+				Route::get('', 'controller_feedback@index');
 				Route::post('submitFeedback', 'controller_feedback@submitFeedback');
 		});
 

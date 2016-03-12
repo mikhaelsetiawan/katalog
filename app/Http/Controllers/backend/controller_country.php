@@ -12,6 +12,7 @@ class controller_country extends Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 

@@ -12,6 +12,7 @@ class controller_member extends Controller {
 	//Reminder : buat email baru hati2 unique, kalau sudah hapus tidak bisa buat dengan email yang sama
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 

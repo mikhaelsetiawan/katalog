@@ -1,4 +1,4 @@
-@extends('app')
+@extends('frontend/view_frontend_index')
 
 @section('popup')
 <div class="popup-overlay">
@@ -912,7 +912,15 @@
 @section('content')
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
-        <h3>Business</h3>
+        <h3>
+          Business
+
+        <button type="button" class="btn btn-warning btn-xs " onclick="reportThis(2,{!! $business['business_id'] !!})" class="btn btn-success btn-sm" >
+            <span class="glyphicon glyphicon-flag"></span>
+            <span class="hidden-sm" style="margin-left: 6px;">Report this</span>
+        </button>
+
+        </h3>
         @if($errors->any())
         <div class="alert alert-danger">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -1105,6 +1113,7 @@
       $styleTable = '';
       $reviewContent = '';
       $eventOnClick = '';
+       $ratingScore = '';
       if(is_null($model_review))
       {
         $styleTable = 'style="width:100%;"';
@@ -1124,14 +1133,16 @@
       <tbody>
         <script>ratingId = new Array();</script>
         @foreach($business->bfield->rating() as $rating)
+        <?php
+            $ratingScore = $model_review->rating->where('rating_id',$rating->rating_id)->first();
+        ?>
         <script>ratingId.push({{ $rating->rating_id  }});</script>
         <tr>
         	<td>{{ $rating->rating_name }}</td>
         	<td>:</td>
         	<td>
         	  <?php
-        	    $ratingScore = $model_review->rating->where('rating_id',$rating->rating_id)->first();
-              if(is_null($ratingScore))
+              if(is_null($ratingScore) || $ratingScore == '')
               {
             ?>
         	    <input value="" class="form-control" min="1" max="10" type="number" name="{{ $rating->rating_id }}" id="rating_{{ $rating->rating_id }}"/>

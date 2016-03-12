@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
 			$this->call(reviewTableSeeder::class);
 			$this->call(reviewRatingTableSeeder::class);
 
+			$this->call(reportCategoryTableSeeder::class);
+			$this->call(reportTableSeeder::class);
+
     }
 }
 
@@ -609,6 +612,48 @@ class DatabaseSeeder extends Seeder
 						'review_id' => '3',
 						'rating_id' => '3',
 						'rrating_score' => '4'
+					],
+				)
+			);
+		}
+	}
+
+	class reportCategoryTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('report_category')->delete();
+			DB::table('report_category')->insert(array(
+					[
+						'reportcat_name' => 'Abusive Language'
+					],
+					[
+						'reportcat_name' => 'Fraud'
+					],
+				)
+			);
+		}
+	}
+
+	class reportTableSeeder extends Seeder
+	{
+		public function run()
+		{
+			DB::table('report')->delete();
+			DB::table('report')->insert(array(
+					[
+						'reportcat_id' => '1',
+						'member_id' => '1',
+						'report_target_type' => '5',
+						'report_target_id' => '1',
+						'report_content' => 'Review mengandung unsur SARA, mohon ditindaklanjuti.'
+					],
+					[
+						'reportcat_id' => '2',
+						'member_id' => '2',
+						'report_target_type' => '4',
+						'report_target_id' => '1',
+						'report_content' => 'Event yang diselenggarakan merupakan event tipuan, sebaiknya dilaporkan pada pihak yang berwenang.'
 					],
 				)
 			);
