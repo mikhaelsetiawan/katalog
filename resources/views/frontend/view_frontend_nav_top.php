@@ -1,4 +1,4 @@
-<nav>
+<nav class="nav_top">
   <ul>
     <li onclick="$('#master_sub').slideToggle();">
       <span class=" glyphicon glyphicon-list-alt" aria-hidden="true"></span>

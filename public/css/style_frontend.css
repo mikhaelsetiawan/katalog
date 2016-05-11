@@ -32,9 +32,9 @@ header{
   color: white;
   padding: 5px 50px;
   border-bottom: 1px solid gray;
+  position:fixed;
+  width: 100vw;
 }
-
-
 
 a {
   text-decoration: none;
@@ -47,44 +47,65 @@ a:hover {
   color: blue;
 }
 
-nav {
+nav.nav_top {
    background-color: #111111;
    width: 200px;
    position: fixed;
    height: 100%;
    color: #CCCCCC;
    width: 10%;
-  display:none;
+   display:none;
 }
 
-nav ul {
+nav.nav_top ul {
   padding: 0px;
   list-style : none;
   margin: 0px;
 }
-nav ul li {
+nav.nav_top ul li {
   padding: 5px 10px;
   border-bottom: 1px solid white;
   transition: color 0.5s, background-color 0.5s;
 }
-nav ul li:hover { 
+nav.nav_top ul li:hover { 
   cursor: pointer;  
   background-color: #DDDDDD;
   color: black;
 }
 
-nav ul.sub {
+nav.nav_top ul.sub {
   display : none;
   text-decoration: none;
 }
-nav ul.sub li {
+nav.nav_top ul.sub li {
   border:none;
   padding: 5px 30px;
   border-bottom: 1px solid white;
 }
 
+nav.nav_left {
+  width:200px;
+  background-color: lightgray;
+  height:100vh;
+  float:left;
+}
+nav.nav_left ul {
+  list-style: none;  
+  margin: 0px;
+  padding: 20px;
+  padding-top: 60px;
+}
+
 main {
-  padding-left: 10%;
+  padding: 25px;
+  padding-top: calc(40px + 25px);
+  float: left;
+}
+
+div.items {
+  width: 10vw;
+  height: 50vh;
+  background: aqua;
 }
 
 table thead {

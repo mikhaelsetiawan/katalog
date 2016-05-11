@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Katalog</title>
+        <title>Katalog Bisnis Online</title>
           <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
           <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
           <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -23,13 +23,27 @@
     <body>
       @yield('popup')
       @include('frontend.view_frontend_header')
-      @include('frontend.view_frontend_nav')
+      @include('frontend.view_frontend_nav_top')
+      <style>
+        
+      </style>
+      <nav class="nav_left">
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+        </ul>
+      </nav>
       <main>
         @yield('content')
-      @yield('page-script')
-      </main>
-      
-      
+        <section>
+          <div class="items">
+            <img src="http://blogjob.com/oneangrygamer/files/2015/10/Image185-585x300.jpg">
+          </div>
+        </section>
+        
+        @yield('page-script')
+      </main>          
     </body>
 </html>
 
