@@ -1,4 +1,4 @@
-@extends('app')
+@extends('frontend/view_frontend_index')
 
 @section('content')
 <div class="col-md-6 col-md-offset-2">

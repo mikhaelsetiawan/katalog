@@ -12,6 +12,7 @@ class controller_business extends Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 

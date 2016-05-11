@@ -11,6 +11,7 @@ class controller_frontend extends Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 

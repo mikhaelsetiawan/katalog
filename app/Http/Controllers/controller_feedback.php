@@ -4,11 +4,13 @@ use App\Http\Requests;
 use App\Models\model_feedback;
 use App\Models\model_feedback_category;
 use App\Models\model_member;
+use DateTime;
 
 class controller_feedback extends Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 
@@ -28,6 +30,8 @@ class controller_feedback extends Controller {
 
 	public function submitFeedback()
 	{
+		$member_id = auth()->guard('member')->user()->member_id;
+		$_POST['member_id'] = $member_id;
 		$err = array();
 		if ($_POST['_type'] == 3) {
 			$model_feedback = model_feedback::find($_POST['feedback_id']);
@@ -36,10 +40,12 @@ class controller_feedback extends Controller {
 			echo $ret;
 		}elseif ($_POST['_type'] == 1) {
 			$model_feedback = new model_feedback();
-			if($model_feedback->create($_POST))
+			$model_feedback ->fill($_POST);
+			if($model_feedback->save())
 			{
 				$ret = array();
 				$ret['feedback_id'] = $model_feedback->feedback_id;
+				$ret['created_at'] = date_format(new DateTime($model_feedback->created_at), 'd-M-Y H:i:s');
 				echo json_encode($ret);
 			}else{
 				$ret = 0;

@@ -1,4 +1,4 @@
-@extends('app')
+@extends('frontend/view_frontend_index')
 
 @section('page-script')
 

@@ -15,6 +15,7 @@ use App\Models\model_photos_category;
 use App\Models\model_photos_news;
 use App\Models\model_photos_event;
 use App\Models\model_bticket;
+use App\Models\model_report_category;
 use App\Models\model_review;
 use App\Models\model_review_rating;
 use App\Models\model_ticket;
@@ -31,6 +32,7 @@ class controller_business extends Controller {
 
 	public function __construct()
 	{
+		parent::__construct();
 		//$this->middleware('auth');
 	}
 
